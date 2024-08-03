@@ -1,54 +1,32 @@
-/* RatBot, by Subsentient.
- * Public domain.
- */
-///How many tiles away an oil has to be before we will NOT build it.
-const MaxOilDistance = 20;
+const MaxOilDistance 	  = 20;	// How many tiles away an oil has to be before we will NOT build it.
 const MaxWatchingDistance = 45;
-var TrucksBeingMade = 0; //The number of trucks currently in production.
-var HadExtraTrucks = false; //If we started with more than 15 trucks, as some maps do.
-var EnemyNearBase = false; //Whether there's enemy units near our base.
 var UniversalRallyPoint = null;
+var TrucksBeingMade = 0;	// The number of trucks currently in production.
+var HadExtraTrucks  = false;	// If we started with more than 15 trucks, as some maps do.
+var EnemyNearBase   = false;	// Whether there's enemy units near our base.
 var FactoryMode = null;
 var LastBeaconX = null;
 var LastBeaconY = null;
 var LastBeaconOrigin = null;
 var FastControlPlayer = null;
-/**//*AFTER THIS IS STUFF THAT CAN CHANGE.*//**/
-var CurrentRatio = new UnitRatio(null, 0.0, 0.0); //Trigger weapon doesn't matter for the first ratio.
-var BuildJobs = [];
-var IsATWeapon = {};
-var RBGCounter = 0; //Group 1 is reserved for things that don't belong in a group.
-var RBGReg = {};
-function RBGroup()
-{
-	this.ID = ++RBGCounter;
-}
-RBGroup.prototype = 
-{
-	AddDroid : function(Droid)
-	{
-		RBGReg[Droid.id] = this.ID;
-	},
-	DelDroid : function(Droid)
-	{
-		delete RBGReg[Droid.id];
-	},
-	HasDroid : function(Droid)
-	{
-		return RBGReg[Droid.id] === this.ID;
-	},
-	Wipe : function()
-	{
-		for (R in RBGReg)
-		{
-			if (RBGReg[R] === this.ID)
-			{
-				delete RBGReg[R];
-			}
-		}
-	},
-	Assign : function(Truckles)
-	{
+var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
+var BuildJobs   = [];
+var IsATWeapon  = {};
+var RBGCounter  = 0; 		// Group 1 is reserved for things that don't belong in a group.
+var RBGReg	= {};
+function RBGroup() { this.ID = ++RBGCounter; }
+RBGroup.prototype = {
+	AddDroid : function(Droid) {
+		RBGReg[Droid.id] = this.ID;},
+	DelDroid : function(Droid) {
+		delete RBGReg[Droid.id]; },
+	HasDroid : function(Droid) {
+		return RBGReg[Droid.id] === this.ID; },
+	Wipe : function() {
+		for (R in RBGReg) {
+			if (RBGReg[R] === this.ID) {
+			delete RBGReg[R]; } } },
+	Assign : function(Truckles) {
 		this.Wipe();
 		for (T in Truckles)
 		{
