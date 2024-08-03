@@ -342,10 +342,10 @@ function PerformAttack()
 	}
 	var NonDefenseStructs = enumCriticalStructs(Target);
 	if (EnemyAttackDroids < 20)
-	{ // They are almost dead, finish them off.
+	{ // They are almost dead, go finish them off.
 		for (Droid in Droids)
 		{
-			var AttackStructure = Math.floor(Math.random()*2); //Boolean
+			var AttackStructure = Math.floor(Math.random()*2); // Boolean
 			if (Droids[Droid].droidType === DROID_CONSTRUCT || Droids[Droid].droidType === DROID_CYBORG_CONSTRUCT) continue;
 			if (AttackStructure)
 			{
@@ -362,7 +362,7 @@ function PerformAttack()
 		}
 	}
 	else
-	{ ///They got an army, just send a fuckton to their base.
+	{ // They got an army, just send loads to their base.
 		for (Droid in Droids)
 		{
 			if (Droids[Droid].droidType === DROID_CONSTRUCT || Droids[Droid].droidType === DROID_CYBORG_CONSTRUCT)
@@ -469,7 +469,7 @@ function OrderModuleBuild(BaseStructure)
 {
 	var Module;
 	var TrucksWeWant = 0;
-	//Determine what we are going to build.
+	// Determine what we are going to build.
 	switch (BaseStructure.stattype)
 	{
 		case FACTORY:
