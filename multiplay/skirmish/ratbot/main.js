@@ -33,8 +33,7 @@ RBGroup.prototype = {
 			this.AddDroid(Truckles[T]);
 		}
 	},
-	GetDroids : function()
-	{ // Only returns living droids, obviously.
+	GetDroids : function() { // Only returns living droids, obviously.
 		var Droids = enumDroid(me, DROID_ANY);
 		var RetVal = [];
 		for (D in Droids)
@@ -46,8 +45,7 @@ RBGroup.prototype = {
 		}
 		return RetVal;
 	},
-	Size : function()
-	{ // Kinda expensive.
+	Size : function() { // Kinda expensive.
 		var Num = 0;
 		for (R in RBGReg)
 		{
@@ -146,8 +144,7 @@ function ShouldBuildATTank()
 {
 	return CurrentRatio.TankATPercent >= GetCurrentTankATPercent();
 }
-function ShouldBuildATBorg()
-{ // le operator is not a typo.
+function ShouldBuildATBorg() { // le operator is not a typo.
 	return CurrentRatio.BorgATPercent >= GetCurrentBorgATPercent();
 }
 function PopulateWeaponTypes()
@@ -228,10 +225,8 @@ function AttackTarget(TargetObject, UnitList, ForceAttack)
 	for (D in UnitList)
 	{
 		if (IsTruck(UnitList[D])) continue;
-		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;
-		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) continue;
-		// In range for an attack.
-		// Fire on the appropriate type of unit wherever possible.
+		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;	// In range for an attack.
+		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) continue;		// Fire on the appropriate type of unit wherever possible.
 		if (!ForceAttack &&
 			TargetObject.type == DROID &&
 			(TargetObject.droidType != DROID_CYBORG &&
@@ -315,7 +310,6 @@ function PerformAttack()
 {
 	if (FastControlPlayer !== null) return;
 	var Droids = enumDroid(me, DROID_ANY);
-	// Find an enemy to pwn
 	var Target = ChooseEnemy(false);
 	if (Target == null)
 	{
@@ -325,24 +319,20 @@ function PerformAttack()
 	var EnemyDroids = enumDroid(Target, DROID_ANY);
 	var EnemyAttackDroids = 0;
 	var OurAttackDroids = 0;
-	for (D in Droids)
-	{ // Our attack droids.
+	for (D in Droids) {	 // Our attack droids.
 		if (Droids[D].droidType === DROID_CYBORG_CONSTRUCT || Droids[D].droidType === DROID_CONSTRUCT) continue;
 		++OurAttackDroids;
 	}
-	for (D in EnemyDroids)
-	{ // Enemy attack droids.
+	for (D in EnemyDroids) { // Enemy attack droids.
 		if (EnemyDroids[D].droidType === DROID_CYBORG_CONSTRUCT || EnemyDroids[D].droidType === DROID_CONSTRUCT) continue;
-		++EnemyAttackDroids;
-	} // Only attack when we got all possible units, or we have 3x as many units as them.
+		++EnemyAttackDroids; } // Only attack when we have all possible units, or we have 3x as many units as them.
 	if (Droids.length != 150 && ((EnemyAttackDroids * 3 > OurAttackDroids) || OurAttackDroids < 20))
 	{
 		OrderRetreat(false);
 		return;
 	}
 	var NonDefenseStructs = enumCriticalStructs(Target);
-	if (EnemyAttackDroids < 20)
-	{ // They are almost dead, go finish them off.
+	if (EnemyAttackDroids < 20) { // They are almost dead, go finish them off.
 		for (Droid in Droids)
 		{
 			var AttackStructure = Math.floor(Math.random()*2); // Boolean
@@ -361,8 +351,7 @@ function PerformAttack()
 			}
 		}
 	}
-	else
-	{ // They got an army, just send loads to their base.
+	else { // They got an army, just send loads to their base.
 		for (Droid in Droids)
 		{
 			if (Droids[Droid].droidType === DROID_CONSTRUCT || Droids[Droid].droidType === DROID_CYBORG_CONSTRUCT)
@@ -443,8 +432,7 @@ function CountTrucks()
 	if (BorgTrucks) Len += BorgTrucks.length;
 	return Len;
 }
-function FindTrucks(Requested, StealOk, AllowOilers)
-{ //Find Requested number of idle trucks.
+function FindTrucks(Requested, StealOk, AllowOilers) { // Find Requested number of idle trucks.
 	var TruckList = [];
 	var KnownTrucks = enumDroid(me, DROID_CONSTRUCT);
 	var KnownBorgTrucks = enumDroid(me, DROID_CYBORG_CONSTRUCT);
@@ -468,8 +456,7 @@ function FindTrucks(Requested, StealOk, AllowOilers)
 function OrderModuleBuild(BaseStructure)
 {
 	var Module;
-	var TrucksWeWant = 0;
-	// Determine what we are going to build.
+	var TrucksWeWant = 0; // Determine what we are going to build.
 	switch (BaseStructure.stattype)
 	{
 		case FACTORY:
@@ -536,8 +523,7 @@ function BuildOils()
 	var Truckles = OilTrucks.GetDroids();
 	var OSize = Truckles.length;
 	var OilTrucksWanted = 4;
-	//No pre-existing oiler trucks.
-	if (OSize < OilTrucksWanted)
+	if (OSize < OilTrucksWanted) // No pre-existing oiler trucks.
 	{
 		var NewTruckles = GrabNewOilTrucks(OilTrucksWanted);
 		if (NewTruckles && NewTruckles.length > OSize)
@@ -585,8 +571,7 @@ function eventStructureBuilt(Struct, Droid)
 		if (BuildJobs[Inc].x == Struct.x && BuildJobs[Inc].y == Struct.y)
 		{
 			rbdebug("Structure " + BuildJobs[Inc].StructType + " completed at " + Struct.x + "," + Struct.y);
-			//We just delete these ones.
-			BuildJobs.splice(Inc);
+			BuildJobs.splice(Inc); // We just delete these ones.
 			break;
 		}
 	}
@@ -645,18 +630,15 @@ function UnitInGroup(GroupID, Droid)
 }
 function MakeTanks()
 {
-	//Make trucks if we don't have enough.
-	if (MakeTrucks(false)) return;
+	if (MakeTrucks(false)) return; // Make trucks if we don't have enough.
 	var CC = enumStruct(me, baseStruct_CC);
-	//Don't make tanks if we don't have a command center.
-	if (!CC.length || CC[0].status != BUILT) return;
+	if (!CC.length || CC[0].status != BUILT) return; // Don't make tanks if we don't have a command center.
 	var Facs = enumStruct(me, baseStruct_Factory);
 	if (Facs == null) return;
 	FactoryLoop:
 	for (Fac in Facs)
 	{
 		if (!structureIdle(Facs[Fac]) || Facs[Fac].status != BUILT) continue;
-		//AT tanks
 		if (ShouldBuildATTank())
 		{
 			for (T in AT_TankTemplates)
@@ -668,7 +650,6 @@ function MakeTanks()
 				}
 			}
 		}
-		//AP tanks
 		for (T in AP_TankTemplates)
 		{
 			var TemplateName = AP_TankTemplates[T][2] + " " + AP_TankTemplates[T][0] + " " + AP_TankTemplates[T][1];
@@ -718,8 +699,7 @@ function WorkOnBase()
 	var Factories = enumStruct(me, baseStruct_Factory);
 	var BorgFacs = enumStruct(me, baseStruct_BorgFac);
 	var CC = enumStruct(me, baseStruct_CC);	
-	var NumTrucks = CountTrucks();
-	//Grab oiler trucks.
+	var NumTrucks = CountTrucks(); // Grab oiler trucks.
 	if (NeedToBuildOils())
 	{
 		BuildOils();
@@ -727,8 +707,7 @@ function WorkOnBase()
 	else
 	{
 		OilTrucks.Wipe();
-	}
-	//Basic stuff just to get us going
+	} // Basic stuff just to get us going
 	if (NumTrucks <= 4 && Factories.length < 2)
 	{
 		OrderBaseBuild(baseStruct_Factory);
@@ -741,8 +720,7 @@ function WorkOnBase()
 	else if (Factories.length < 2)
 	{
 		OrderBaseBuild(baseStruct_Factory);
-	}
-	//More automated base building
+	} // More automated base building
 	if (Generators.length < 4)
 	{
 		OrderBaseBuild(baseStruct_Generator);
@@ -763,16 +741,14 @@ function WorkOnBase()
 	{
 		OrderBaseBuild(baseStruct_Factory);
 	}
-	//Get borg facs up
+	// Get borg facs up
 	if (isStructureAvailable(baseStruct_BorgFac, me) && BorgFacs.length < Limit_BFac)
 	{
 		OrderBaseBuild(baseStruct_BorgFac);
 	}
-	///Modules.
 	if (isStructureAvailable(Module_Research, me))
 	{
 		var FoundOne = false;
-		//Researches
 		for (var Inc = 0; Inc < Researches.length; ++Inc)
 		{
 			if (!Researches[Inc].modules)
@@ -783,11 +759,10 @@ function WorkOnBase()
 				}
 			}
 		}
-		if (FoundOne) return; //Research modules first.
+		if (FoundOne) return; // Research modules first.
 	}
 	if (isStructureAvailable(Module_Factory, me))
-	{
-		//Factories
+	{ // Factories
 		for (var Inc = 0; Inc < Factories.length; ++Inc)
 		{
 			if (Factories[Inc].modules < 2)
@@ -797,8 +772,7 @@ function WorkOnBase()
 		}
 	}
 	if (isStructureAvailable(Module_Generator, me))
-	{
-		//Generators.
+	{ // Generators
 		for (var Inc = 0; Inc < Generators.length; ++Inc)
 		{
 			if (!Generators[Inc].modules)
@@ -821,8 +795,7 @@ function WorkOnBase()
 		BuildJobs.push(Job);
 	}
 }
-function CheckNeedRecycle()
-{
+function CheckNeedRecycle() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var RecycleCount = 35;
 	if (Droids.length !== 150) return; //Nothing to do.
@@ -904,15 +877,13 @@ function eventStartLevel()
 	setTimer("ManageResearchStages", 5000);
 	setTimer("UpdateUniversalRallyPoint", 30000);
 }
-function UpdateRatios()
-{ //Although eventResearched() does a nice job with stuff we researched ourselves, allied stuff needs this function.
-	//Make ratios work properly in bases modes.
-	for (R in Ratios)
+function UpdateRatios() { // Although eventResearched() does a nice job with stuff we researched ourselves, allied stuff needs this function.
+	for (R in Ratios) // Make ratios work properly in bases modes.
 	{
 		var Res = getResearch(Ratios[R].TriggerTech);
 		if (Res.done)
 		{
-			CurrentRatio = Ratios[R];	
+			CurrentRatio = Ratios[R];
 			break;
 		}
 	}
@@ -920,8 +891,7 @@ function UpdateRatios()
 function UpdateUniversalRallyPoint()
 {
 	var Enemy = ChooseEnemy(true);
-	if (!Enemy) return null;
-	//Move to a reasonable rally point. The actual API for this seems to be broken.
+	if (!Enemy) return null; // Move to a reasonable rally point. The actual API for this seems to be broken.
 	UniversalRallyPoint = ChooseForwardLocation(Enemy, 25);
 }
 function GetUniversalRallyPoint()
@@ -953,7 +923,7 @@ function WeAreWeaker(OtherPlayer)
 	var OurDroids = enumDroid(me, DROID_ANY);
 	var TheirDroids = enumDroid(OtherPlayer, DROID_ANY);
 	if (OurDroids.length >= TheirDroids.length) return false;
-	return (OurDroids.length / TheirDroids.length * 100) < 85; //85% size of enemy force
+	return (OurDroids.length / TheirDroids.length * 100) < 85; //  85% size of enemy force
 }
 function OrderRetreat(Force)
 {
@@ -989,8 +959,7 @@ function eventChat(Origin, Target, Msg)
 			chat(Origin, FactoryMode !== null ?
 						"I will gift future units to you as they produce." :
 						"I will stop automatically gifting you units.");
-			//Fall through
-		case "givetanks":
+		case "givetanks": // Fall through
 		{
 			var Droids = enumDroid(me, DROID_ANY);
 			if (!Droids)
@@ -1021,8 +990,7 @@ function eventChat(Origin, Target, Msg)
 			}
 			donateObject(Trucks[0], Origin);
 			break;
-		}
-		//Easter eggs for you.
+		} // Easter eggs
 		case "We are the Borg.":
 		case "You will be assimilated.":
 		case "Resistance is futile.":
@@ -1067,11 +1035,9 @@ function eventChat(Origin, Target, Msg)
 		}
 	}
 }
-function eventAttacked(Target, Attacker)
-{
-	//Account for splash damage
+function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (Attacker.player === me || EnemyNearBase || FastControlPlayer !== null) return;
-	if (Target.type === DROID && Target.health < 60 && NumRepairFacilities() > 0) //60% damage
+	if (Target.type === DROID && Target.health < 60 && NumRepairFacilities() > 0) // 60% damage
 	{
 		orderDroid(Target, DORDER_RTR);
 	}
@@ -1095,7 +1061,7 @@ function eventBeacon(X, Y, Origin, Target, Msg)
 		return;
 	}
 	if (Origin == FastControlPlayer)
-	{ //Perform fast movement control
+	{ // Perform fast movement control
 		var Droids = enumDroid(me, DROID_ANY);
 		for (D in Droids)
 		{
