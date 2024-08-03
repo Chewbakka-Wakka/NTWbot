@@ -34,7 +34,7 @@ RBGroup.prototype = {
 		}
 	},
 	GetDroids : function()
-	{ //Only returns living droids, obviously.
+	{ // Only returns living droids, obviously.
 		var Droids = enumDroid(me, DROID_ANY);
 		var RetVal = [];
 		for (D in Droids)
@@ -47,7 +47,7 @@ RBGroup.prototype = {
 		return RetVal;
 	},
 	Size : function()
-	{ //Kinda expensive.
+	{ // Kinda expensive.
 		var Num = 0;
 		for (R in RBGReg)
 		{
@@ -65,7 +65,7 @@ function BuildJob(Truckles, StructType, x, y, TrucksWeWant, ModNum)
 	this.y = y;
 	this.TrucksWeWant = TrucksWeWant;
 	this.Completed = false;
-	this.StartingNumModules = ModNum; //How many modules we had when this job was created.
+	this.StartingNumModules = ModNum; // How many modules we had when this job was created.
 	for (T in Truckles)
 	{
 		if (!Truckles[T]) continue;
@@ -88,8 +88,8 @@ function StructUsesModules(StructType)
 }
 BuildJob.prototype =
 {
-	NumAssignedTrucks : function()
-	{ //Only returns living trucks.
+	NumAssignedTrucks : function() // Only returns living trucks.
+	{
 		return this.Group.Size();
 	},
 }
@@ -147,7 +147,7 @@ function ShouldBuildATTank()
 	return CurrentRatio.TankATPercent >= GetCurrentTankATPercent();
 }
 function ShouldBuildATBorg()
-{ //le operator is not a typo.
+{ // le operator is not a typo.
 	return CurrentRatio.BorgATPercent >= GetCurrentBorgATPercent();
 }
 function PopulateWeaponTypes()
@@ -230,8 +230,8 @@ function AttackTarget(TargetObject, UnitList, ForceAttack)
 		if (IsTruck(UnitList[D])) continue;
 		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;
 		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) continue;
-		//In range for an attack.
-		//Fire on the appropriate type of unit wherever possible.
+		// In range for an attack.
+		// Fire on the appropriate type of unit wherever possible.
 		if (!ForceAttack &&
 			TargetObject.type == DROID &&
 			(TargetObject.droidType != DROID_CYBORG &&
@@ -263,13 +263,10 @@ function WatchForEnemies()
 }
 function ChooseEnemy(Force)
 {
-	if (EnemyNearBase && !Force) return null; //Don't go on a crusade when there's a bad guy nearby.
+	if (EnemyNearBase && !Force) return null; // Don't go on a crusade when there's a bad guy nearby.
 	var Enemies = [];
-	//Enumerate all enemies we have.
-	for (var Inc = 0; Inc < maxPlayers; ++Inc)
-	{
-		//Never attack while someone is superior, sit and build up our forces instead.
-		if (!Force && WeAreWeaker(Inc)) return null;
+	for (var Inc = 0; Inc < maxPlayers; ++Inc) {
+		if (!Force && WeAreWeaker(Inc)) return null; // Never attack while someone is superior, sit and build up our forces instead.
 		if (Inc === me || allianceExistsBetween(me, Inc)) continue;
 		var EnemyStructs = enumCriticalStructs(Inc);
 		var EnemyDroids = enumDroid(Inc, DROID_ANY);
@@ -280,8 +277,7 @@ function ChooseEnemy(Force)
 			Enemies.push(Inc);
 		}
 	}
-	if (!Enemies.length) return null;
-	//Pick the closest one.
+	if (!Enemies.length) return null; // Pick the closest one.
 	var ClosestDistance = Infinity;
 	var ClosestEnemy = null;
 	for (Enemy in Enemies)
@@ -319,7 +315,7 @@ function PerformAttack()
 {
 	if (FastControlPlayer !== null) return;
 	var Droids = enumDroid(me, DROID_ANY);
-	//Find an enemy to pwn
+	// Find an enemy to pwn
 	var Target = ChooseEnemy(false);
 	if (Target == null)
 	{
@@ -330,16 +326,15 @@ function PerformAttack()
 	var EnemyAttackDroids = 0;
 	var OurAttackDroids = 0;
 	for (D in Droids)
-	{ //Our attack droids.
+	{ // Our attack droids.
 		if (Droids[D].droidType === DROID_CYBORG_CONSTRUCT || Droids[D].droidType === DROID_CONSTRUCT) continue;
 		++OurAttackDroids;
 	}
 	for (D in EnemyDroids)
-	{ //Enemy attack droids.
+	{ // Enemy attack droids.
 		if (EnemyDroids[D].droidType === DROID_CYBORG_CONSTRUCT || EnemyDroids[D].droidType === DROID_CONSTRUCT) continue;
 		++EnemyAttackDroids;
-	}
-	//Only attack when we got all possible units, or we have 3x as many units as them.
+	} // Only attack when we got all possible units, or we have 3x as many units as them.
 	if (Droids.length != 150 && ((EnemyAttackDroids * 3 > OurAttackDroids) || OurAttackDroids < 20))
 	{
 		OrderRetreat(false);
@@ -347,7 +342,7 @@ function PerformAttack()
 	}
 	var NonDefenseStructs = enumCriticalStructs(Target);
 	if (EnemyAttackDroids < 20)
-	{ ///They are almost dead, finish them off.
+	{ // They are almost dead, finish them off.
 		for (Droid in Droids)
 		{
 			var AttackStructure = Math.floor(Math.random()*2); //Boolean
