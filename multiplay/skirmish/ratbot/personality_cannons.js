@@ -1,25 +1,24 @@
 include("/multiplay/skirmish/ratbot/wztypes.js")
-///Research path.
+// Research path.
 var ResearchPath = ["R-Vehicle-Engine01", "R-Wpn-RailGun03", "R-Wpn-Cannon1Mk1", "R-Vehicle-Prop-Halftracks", "R-Struc-Research-Module",
 					"R-Struc-Research-Upgrade09", "R-Vehicle-Body05",
 					"R-Wpn-Cannon4AMk1", "R-Wpn-Cannon3Mk1", "R-Struc-Factory-Upgrade01", "R-Vehicle-Body11", "R-Struc-RepairFacility",
 					"R-Vehicle-Metals04", "R-Cyborg-Hvywpn-Mcannon", "R-Cyborg-Metals04",
 					"R-Struc-Factory-Upgrade09", "R-Wpn-MG2Mk1"];
-///Expanded research path triggered when a piece of tech becomes available.
+// Expanded research path triggered when a piece of tech becomes available.
 var ResearchStages = new Array(
-					new ResearchStage("R-Cyborg-Hvywpn-Mcannon", ["R-Wpn-RailGun03", "R-Vehicle-Body09", "R-Cyborg-Hvywpn-HPV",
-									"R-Wpn-Cannon-ROF02", "R-Struc-Power-Upgrade03a", "R-Struc-Factory-Upgrade09", "R-Sys-Sensor-Upgrade02",
-									"R-Cyborg-Metals09","R-Vehicle-Metals09"]),
-					new ResearchStage("R-Wpn-Rail-Damage02", ["R-Cyborg-Hvywpn-RailGunner", "R-Vehicle-Prop-Tracks", "R-Vehicle-Body10",
-									"R-Sys-Autorepair-General", "R-Struc-Materials09", "R-Sys-Sensor-UpLink"])
-					);
-///Truck templates. We just iterate through these.
+			new ResearchStage("R-Cyborg-Hvywpn-Mcannon", ["R-Wpn-RailGun03", "R-Vehicle-Body09", "R-Cyborg-Hvywpn-HPV",
+				"R-Wpn-Cannon-ROF02", "R-Struc-Power-Upgrade03a", "R-Struc-Factory-Upgrade09", "R-Sys-Sensor-Upgrade02",
+				"R-Cyborg-Metals09","R-Vehicle-Metals09"]),
+			new ResearchStage("R-Wpn-Rail-Damage02", ["R-Cyborg-Hvywpn-RailGunner", "R-Vehicle-Prop-Tracks", "R-Vehicle-Body10",
+				"R-Sys-Autorepair-General", "R-Struc-Materials09", "R-Sys-Sensor-UpLink"]) );
+// Truck templates. We just iterate through these.
 var TruckTemplates = new Array(
 				[body_Retaliation, prop_Tracks, "Spade1Mk1"],
 				[body_Bug, prop_Tracks, "Spade1Mk1"],
 				[body_Viper, prop_Halftracks, "Spade1Mk1"],
 				[body_Viper, prop_Wheels, "Spade1Mk1"]);
-///Tank pre-templates.
+// Tank pre-templates.
 var AT_TankTemplates = new Array(
 				[body_Vengeance, prop_Tracks, "RailGun3Mk1"],
 				[body_Tiger, prop_Halftracks, "RailGun3Mk1"],
