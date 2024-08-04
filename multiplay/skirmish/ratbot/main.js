@@ -47,16 +47,11 @@ RBGroup.prototype = {
 	},
 	Size : function() { // Kinda expensive.
 		var Num = 0;
-		for (R in RBGReg)
-		{
-			if (RBGReg[R] === this.ID) ++Num;
-		}
-		return Num;
-	},
-}
+		for (R in RBGReg) {
+			if (RBGReg[R] === this.ID) ++Num; }
+		return Num; }, }
 var OilTrucks = new RBGroup();
-function BuildJob(Truckles, StructType, x, y, TrucksWeWant, ModNum)
-{
+function BuildJob(Truckles, StructType, x, y, TrucksWeWant, ModNum) {
 	this.Group = new RBGroup();
 	this.StructType = StructType;
 	this.x = x;
@@ -70,38 +65,25 @@ function BuildJob(Truckles, StructType, x, y, TrucksWeWant, ModNum)
 		this.Group.AddDroid(Truckles[T]);
 		orderDroidBuild(Truckles[T], DORDER_BUILD, this.StructType, this.x, this.y);
 	}
-	rbdebug("Started build job for a " + this.StructType + " at " + this.x + "," + this.y + " using " + Truckles.length + " trucks");
-}
-function StructUsesModules(StructType)
-{
-	switch (StructType)
-	{
+	rbdebug("Started build job for a " + this.StructType + " at " + this.x + "," + this.y + " using " + Truckles.length + " trucks"); }
+function StructUsesModules(StructType) {
+		   switch (StructType) {
 		case baseStruct_Generator:
 		case baseStruct_Factory:
 		case baseStruct_Research:
 			return true;
 		default:
-			return false;
-	}
-}
-BuildJob.prototype =
-{
+			return false; } }
+BuildJob.prototype = {
 	NumAssignedTrucks : function() // Only returns living trucks.
 	{
-		return this.Group.Size();
-	},
-}
-function GetJobForStruct(x, y, StructType)
-{
+	return this.Group.Size(); }, }
+function GetJobForStruct(x, y, StructType) {
 	var J = BuildJobs;
-	for (B in J)
-	{
-		if (J[B].x == x && J[B].y == y && (!StructType || J[B].StructType === StructType) ) return J[B];
-	}
-	return null;
-}
-function AttackUnitBusy(Droid)
-{
+	for (B in J) {
+	if (J[B].x == x && J[B].y == y && (!StructType || J[B].StructType === StructType) ) return J[B]; }
+	return null; }
+function AttackUnitBusy(Droid) {
 	switch (Droid.order)
 	{
 		case DORDER_ATTACK:
@@ -112,22 +94,18 @@ function AttackUnitBusy(Droid)
 			return false;
 	}
 }
-function GetCurrentBorgATPercent()
-{
+function GetCurrentBorgATPercent() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var NumAT = 0;
 	var NumDroids = 0;
-	for (D in Droids)
-	{
+	for (D in Droids) {
 		if (Droids[D].droidType !== DROID_CYBORG) continue;
 		if (IsAntiTank(Droids[D])) ++NumAT;
 		++NumDroids;
 	}
 	var Value = (NumAT / NumDroids) * 100;
-	return Value >= 1 ? Value : 0;
-}
-function GetCurrentTankATPercent()
-{
+	return Value >= 1 ? Value : 0; }
+function GetCurrentTankATPercent() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var NumAT = 0;
 	var NumDroids = 0;
@@ -140,15 +118,11 @@ function GetCurrentTankATPercent()
 	var Value = (NumAT / NumDroids) * 100;
 	return Value >= 1 ? Value : 0;
 }
-function ShouldBuildATTank()
-{
-	return CurrentRatio.TankATPercent >= GetCurrentTankATPercent();
-}
+function ShouldBuildATTank() {
+	return CurrentRatio.TankATPercent >= GetCurrentTankATPercent(); }
 function ShouldBuildATBorg() { // le operator is not a typo.
-	return CurrentRatio.BorgATPercent >= GetCurrentBorgATPercent();
-}
-function PopulateWeaponTypes()
-{
+	return CurrentRatio.BorgATPercent >= GetCurrentBorgATPercent(); }
+function PopulateWeaponTypes() {
 	for (Tmp in AT_TankTemplates)
 	{
 		IsATWeapon[AT_TankTemplates[Tmp][2]] = true;
@@ -166,23 +140,19 @@ function PopulateWeaponTypes()
 		IsATWeapon[AP_BorgTemplates[Tmp][2]] = false;
 	}
 }
-function IsAntiBorg(Droid)
-{
+function IsAntiBorg(Droid) {
 	return !IsATWeapon[Droid.weapons[0].name];
 }
-function IsAntiTank(Droid)
-{
+function IsAntiTank(Droid) {
 	return IsATWeapon[Droid.weapons[0].name];
 }
-function eventDestroyed(Obj)
-{
+function eventDestroyed(Obj) {
 	if (Obj.type === DROID)
 	{
 		delete RBGReg[Obj.id];
 	}
 }
-function ManageResearchStages()
-{
+function ManageResearchStages() {
 	for (S in ResearchStages)
 	{
 		if (ResearchStages[S].Appended) continue;
@@ -195,13 +165,11 @@ function ManageResearchStages()
 		}
 	}
 }
-function ChooseForwardLocation(Enemy, DistancePercent)
-{
+function ChooseForwardLocation(Enemy, DistancePercent) {
 	var Us = startPositions[me];
 	var Them = startPositions[Enemy];
 	var NewPos = { y: Us.x, y : Us.y }
-	if (Us.x > Them.x)
-	{
+	if (Us.x > Them.x) {
 		NewPos.x = Us.x - ((Us.x - Them.x) * (DistancePercent / 100));
 	}
 	else
@@ -220,10 +188,8 @@ function ChooseForwardLocation(Enemy, DistancePercent)
 	NewPos.y = Math.floor(NewPos.y);
 	return NewPos;
 }
-function AttackTarget(TargetObject, UnitList, ForceAttack)
-{
-	for (D in UnitList)
-	{
+function AttackTarget(TargetObject, UnitList, ForceAttack) {
+	for (D in UnitList) {
 		if (IsTruck(UnitList[D])) continue;
 		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;	// In range for an attack.
 		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) continue;		// Fire on the appropriate type of unit wherever possible.
@@ -241,8 +207,7 @@ function AttackTarget(TargetObject, UnitList, ForceAttack)
 		orderDroidLoc(UnitList[D], DORDER_MOVE, TargetObject.x, TargetObject.y);
 	}
 }
-function WatchForEnemies()
-{
+function WatchForEnemies() {
 	if (FastControlPlayer !== null) return;
 	var EnemyDroids = enumRange(startPositions[me].x, startPositions[me].y, MaxWatchingDistance, ENEMIES, true);		
 	if ((EnemyNearBase = (EnemyDroids && EnemyDroids.length > 0)))
@@ -256,8 +221,7 @@ function WatchForEnemies()
 		}
 	}
 }
-function ChooseEnemy(Force)
-{
+function ChooseEnemy(Force) {
 	if (EnemyNearBase && !Force) return null; // Don't go on a crusade when there's a bad guy nearby.
 	var Enemies = [];
 	for (var Inc = 0; Inc < maxPlayers; ++Inc) {
@@ -286,8 +250,7 @@ function ChooseEnemy(Force)
 	}
 	return ClosestEnemy;
 }
-function enumCriticalStructs(Player)
-{
+function enumCriticalStructs(Player) {
 	var Structs = enumStruct(Player);
 	var NonDefenseStructs = [];
 	for (S in Structs)
@@ -306,8 +269,7 @@ function enumCriticalStructs(Player)
 	}
 	return NonDefenseStructs;
 }
-function PerformAttack()
-{
+function PerformAttack() {
 	if (FastControlPlayer !== null) return;
 	var Droids = enumDroid(me, DROID_ANY);
 	var Target = ChooseEnemy(false);
@@ -362,8 +324,7 @@ function PerformAttack()
 		}
 	}
 }
-function MakeBorgs()
-{
+function MakeBorgs() {
 	var BorgFacs = enumStruct(me, baseStruct_BorgFac);
 	var TankFacs = enumStruct(me, baseStruct_Factory);
 	if (BorgFacs.length > 0 && !TankFacs.length && CountTrucks() < 5 && MakeTrucks(true))
@@ -395,8 +356,7 @@ function MakeBorgs()
 		}
 	}
 }
-function TruckBusy(Truck)
-{
+function TruckBusy(Truck) {
 	switch (Truck.order)
 	{
 		case DORDER_BUILD:
@@ -407,8 +367,7 @@ function TruckBusy(Truck)
 			return false;
 	}
 }
-function FinishHalfBuilds()
-{
+function FinishHalfBuilds() {
 	var Structs = enumStruct(me);
 	for (S in Structs)
 	{
@@ -423,8 +382,7 @@ function FinishHalfBuilds()
 		}
 	}
 }
-function CountTrucks()
-{
+function CountTrucks() {
 	var Trucks = enumDroid(me, DROID_CONSTRUCT);
 	var BorgTrucks = enumDroid(me, DROID_CYBORG_CONSTRUCT);
 	var Len = 0;
@@ -453,8 +411,7 @@ function FindTrucks(Requested, StealOk, AllowOilers) { // Find Requested number 
 	if (!TruckList.length) return null;
 	return TruckList;
 }
-function OrderModuleBuild(BaseStructure)
-{
+function OrderModuleBuild(BaseStructure) {
 	var Module;
 	var TrucksWeWant = 0; // Determine what we are going to build.
 	switch (BaseStructure.stattype)
@@ -482,8 +439,7 @@ function OrderModuleBuild(BaseStructure)
 	BuildJobs.push(Job);
 	return Job;
 }
-function NeedToBuildOils()
-{
+function NeedToBuildOils() {
 	if (CountTrucks() < 5) return false;
 	var Oils = enumFeature(-1, OilPool);
 	for (O in Oils)
@@ -495,12 +451,10 @@ function NeedToBuildOils()
 	}
 	return false;
 }
-function IsOilTruck(Droid)
-{
+function IsOilTruck(Droid) {
 	return OilTrucks.HasDroid(Droid);
 }
-function FindNextIdleOilTruck()
-{
+function FindNextIdleOilTruck() {
 	var Truckles = OilTrucks.GetDroids();
 	for (T in Truckles)
 	{
@@ -509,25 +463,22 @@ function FindNextIdleOilTruck()
 	}
 	return null;
 }
-function GrabNewOilTrucks(NumTrucks)
-{
+function GrabNewOilTrucks(NumTrucks) {
 	var Truckles = FindTrucks(NumTrucks, false, true);
 	if (!Truckles || !Truckles.length) return null;
 	return Truckles;
 }
-function BuildOils()
-{
-	var NumTrucks = CountTrucks();
+function BuildOils() {
+	var 	     NumTrucks = CountTrucks();
 	var MinimumTotalTrucks = 6;
-	if (NumTrucks < MinimumTotalTrucks) return false;
+	if 	    (NumTrucks < MinimumTotalTrucks) return false;
 	var Truckles = OilTrucks.GetDroids();
-	var OSize = Truckles.length;
+	var    OSize = Truckles.length;
 	var OilTrucksWanted = 4;
-	if (OSize < OilTrucksWanted) // No pre-existing oiler trucks.
+	if    (OSize < OilTrucksWanted) // No pre-existing oiler trucks.
 	{
 		var NewTruckles = GrabNewOilTrucks(OilTrucksWanted);
-		if (NewTruckles && NewTruckles.length > OSize)
-		{
+		if (NewTruckles && NewTruckles.length > OSize) {
 			OilTrucks.Assign(NewTruckles);
 			Truckles = NewTruckles;
 			rbdebug("Grabbed " + Truckles.length + " oiler trucks");
@@ -535,12 +486,9 @@ function BuildOils()
 	}
 	if (!Truckles || !Truckles.length) return false;
 	var Oils = enumFeature(-1, OilPool);
-	for (var Inc = 0; Inc < Oils.length; ++Inc)
-	{
-		if (MaxOilDistance < distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, Oils[Inc].x, Oils[Inc].y))
-		{ //Too far away
-			continue;
-		}
+	for (var Inc = 0; Inc < Oils.length; ++Inc) {
+		if (MaxOilDistance < distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, Oils[Inc].x, Oils[Inc].y)) { //Too far away
+		continue; }
 		if (GetJobForStruct(Oils[Inc].x, Oils[Inc].y, baseStruct_Derrick)) continue;
 		var Trucky = FindNextIdleOilTruck();
 		if (!Trucky) return false;
@@ -551,8 +499,7 @@ function BuildOils()
 	}
 	return false;
 }
-function OrderBaseBuild(StructureType)
-{
+function OrderBaseBuild(StructureType) {
 	var TrucksWeWant = 4;
 	var Truckles = FindTrucks(TrucksWeWant, false, false);
 	if (!Truckles || Truckles.length < 2) return null;
@@ -563,8 +510,7 @@ function OrderBaseBuild(StructureType)
 	BuildJobs.push(Job);
 	return Job;
 }
-function eventStructureBuilt(Struct, Droid)
-{
+function eventStructureBuilt(Struct, Droid) {
 	rbdebug("Entered eventStructureBuilt for structure at " + Struct.x + "," + Struct.y);
 	for (var Inc = 0; Inc < BuildJobs.length; ++Inc)
 	{
@@ -576,8 +522,7 @@ function eventStructureBuilt(Struct, Droid)
 		}
 	}
 }
-function MakeTrucks(IsBorgFac)
-{
+function MakeTrucks(IsBorgFac) {
 	var Trucks = enumDroid(me, DROID_CONSTRUCT);
 	var TruckNum = CountTrucks() + TrucksBeingMade;
 	if (TruckNum >= 15) return false;
@@ -616,8 +561,7 @@ function MakeTrucks(IsBorgFac)
 	}
 	return true;
 }
-function UnitInGroup(GroupID, Droid)
-{
+function UnitInGroup(GroupID, Droid) {
 	var Group = enumGroup(GroupID);
 	for (G in Group)
 	{
@@ -628,8 +572,7 @@ function UnitInGroup(GroupID, Droid)
 	}
 	return false;
 }
-function MakeTanks()
-{
+function MakeTanks() {
 	if (MakeTrucks(false)) return; // Make trucks if we don't have enough.
 	var CC = enumStruct(me, baseStruct_CC);
 	if (!CC.length || CC[0].status != BUILT) return; // Don't make tanks if we don't have a command center.
@@ -660,12 +603,10 @@ function MakeTanks()
 		}
 	}
 }
-function eventGameInit()
-{
+function eventGameInit() {
 	PopulateWeaponTypes();
 }
-function ResearchSomething(Lab)
-{
+function ResearchSomething(Lab) {
 	var Worked = false;
 	if (!structureIdle(Lab)) return;
 	for (var Inc = 0; Inc < ResearchPath.length; ++Inc)
@@ -1050,12 +991,10 @@ function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (!Droids || !Droids.length) return;
 	AttackTarget(Attacker, Droids, false);
 }
-function rbdebug(Msg)
-{
+function rbdebug(Msg) {
 	debug("RatBot " + me + ":: " + Msg);
 }
-function eventBeacon(X, Y, Origin, Target, Msg)
-{
+function eventBeacon(X, Y, Origin, Target, Msg) {
 	if (Target !== me || !allianceExistsBetween(Origin, me))
 	{
 		return;
@@ -1081,8 +1020,7 @@ function eventBeacon(X, Y, Origin, Target, Msg)
 	LastBeaconY = Y;
 	LastBeaconOrigin = Origin;
 }
-function eventResearched(Research, Herp)
-{
+function eventResearched(Research, Herp) {
 	rbdebug("Research for item " + Research.name + " completed.");
 	for (R in Ratios)
 	{
