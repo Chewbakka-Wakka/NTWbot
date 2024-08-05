@@ -4,11 +4,11 @@ var UniversalRallyPoint = null;
 var TrucksBeingMade = 0;	// The number of trucks currently in production.
 var HadExtraTrucks  = false;	// If we started with more than 15 trucks, as some maps do.
 var EnemyNearBase   = false;	// Whether there's enemy units near our base.
-var FactoryMode = null;
-var LastBeaconX = null;
-var LastBeaconY = null;
-var LastBeaconOrigin = null;
-var FastControlPlayer = null;
+var FactoryMode		= null;
+var LastBeaconX		= null;
+var LastBeaconY		= null;
+var LastBeaconOrigin	= null;
+var FastControlPlayer	= null;
 var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
 var BuildJobs   = [];
 var IsATWeapon  = {};
@@ -619,8 +619,7 @@ function ResearchSomething(Lab) {
 	}
 	return Worked;
 }
-function DoAllResearch()
-{
+function DoAllResearch() {
 	var Researches = enumStruct(me, RESEARCH_LAB);
 	for (var Inc = 0; Inc < Researches.length; ++Inc)
 	{
@@ -628,19 +627,17 @@ function DoAllResearch()
 		ResearchSomething(Researches[Inc]);
 	}
 }
-function NumRepairFacilities()
-{
+function NumRepairFacilities() {
 	var Repairs = enumStruct(me, REPAIR_FACILITY);
 	return Repairs ? Repairs.length : 0;
 }
-function WorkOnBase()
-{
-	var Researches = enumStruct(me, baseStruct_Research);
-	var Generators = enumStruct(me, baseStruct_Generator);
-	var Factories = enumStruct(me, baseStruct_Factory);
-	var BorgFacs = enumStruct(me, baseStruct_BorgFac);
-	var CC = enumStruct(me, baseStruct_CC);	
-	var NumTrucks = CountTrucks(); // Grab oiler trucks.
+function WorkOnBase() {
+	var Researches	= enumStruct(me, baseStruct_Research);
+	var Generators	= enumStruct(me, baseStruct_Generator);
+	var Factories	= enumStruct(me, baseStruct_Factory);
+	var BorgFacs	= enumStruct(me, baseStruct_BorgFac);
+	var CC		= enumStruct(me, baseStruct_CC);
+	var NumTrucks	= CountTrucks(); // Grab oiler trucks.
 	if (NeedToBuildOils())
 	{
 		BuildOils();
@@ -747,8 +744,7 @@ function CheckNeedRecycle() {
 		orderDroid(Droids[Dec], DORDER_RECYCLE);
 	}
 }
-function IsTruck(Droid)
-{
+function IsTruck(Droid) {
 	switch (Droid.droidType)
 	{
 		case DROID_CYBORG_CONSTRUCT:
@@ -758,8 +754,7 @@ function IsTruck(Droid)
 			return false;
 	}
 }
-function IsAttackUnit(Droid)
-{
+function IsAttackUnit(Droid) {
 	switch (Droid.droidType)
 	{
 		case DROID_WEAPON:
@@ -769,8 +764,7 @@ function IsAttackUnit(Droid)
 			return false;
 	}
 }
-function RetreatTrucks()
-{
+function RetreatTrucks() {
 	var Droids = enumDroid(me, DROID_CONSTRUCT);
 	for (D in Droids)
 	{
@@ -778,8 +772,7 @@ function RetreatTrucks()
 		orderDroidLoc(Droids[D], DORDER_MOVE, startPositions[me].x, startPositions[me].y);
 	}
 }
-function AllTrucksIdle(Group)
-{
+function AllTrucksIdle(Group) {
 	var Truckles = Group.GetDroids();
 	for (T in Truckles)
 	{
@@ -787,8 +780,7 @@ function AllTrucksIdle(Group)
 	}
 	return true;
 }
-function CheckForDeadBuildJobs()
-{
+function CheckForDeadBuildJobs() {
 	Reset:
 	for (var Inc = 0; Inc < BuildJobs.length; ++Inc)
 	{
@@ -800,8 +792,7 @@ function CheckForDeadBuildJobs()
 		}
 	}
 }
-function eventStartLevel()
-{
+function eventStartLevel() {
 	if (CountTrucks() > 15) HadExtraTrucks = true;
 	UpdateRatios();
 	setTimer("DoAllResearch", 500);
@@ -829,22 +820,19 @@ function UpdateRatios() { // Although eventResearched() does a nice job with stu
 		}
 	}
 }
-function UpdateUniversalRallyPoint()
-{
+function UpdateUniversalRallyPoint() {
 	var Enemy = ChooseEnemy(true);
 	if (!Enemy) return null; // Move to a reasonable rally point. The actual API for this seems to be broken.
 	UniversalRallyPoint = ChooseForwardLocation(Enemy, 25);
 }
-function GetUniversalRallyPoint()
-{
+function GetUniversalRallyPoint() {
 	if (!UniversalRallyPoint)
 	{
 		UpdateUniversalRallyPoint();
 	}
 	return UniversalRallyPoint;
 }
-function eventDroidBuilt(droid, fac1)
-{
+function eventDroidBuilt(droid, fac1) {
 	if (droid.droidType === DROID_CONSTRUCT || droid.droidType === DROID_CYBORG_CONSTRUCT)
 	{
 		--TrucksBeingMade;
@@ -859,15 +847,13 @@ function eventDroidBuilt(droid, fac1)
 	if (!Loc) return;
 	orderDroidLoc(droid, DORDER_MOVE, Loc.x, Loc.y);
 }
-function WeAreWeaker(OtherPlayer)
-{
-	var OurDroids = enumDroid(me, DROID_ANY);
+function WeAreWeaker(OtherPlayer) {
+	var OurDroids   = enumDroid(me, DROID_ANY);
 	var TheirDroids = enumDroid(OtherPlayer, DROID_ANY);
 	if (OurDroids.length >= TheirDroids.length) return false;
 	return (OurDroids.length / TheirDroids.length * 100) < 85; //  85% size of enemy force
 }
-function OrderRetreat(Force)
-{
+function OrderRetreat(Force) {
 	var Droids = enumDroid(me, DROID_ANY);
 	rbdebug("Retreating");
 	for (D in Droids)
@@ -879,8 +865,7 @@ function OrderRetreat(Force)
 		orderDroidLoc(Droids[D], DORDER_MOVE, Loc.x, Loc.y);
 	}
 }
-function eventChat(Origin, Target, Msg)
-{
+function eventChat(Origin, Target, Msg) {
 	if (Target !== me || !allianceExistsBetween(Origin, me))
 	{
 		return;
@@ -897,7 +882,7 @@ function eventChat(Origin, Target, Msg)
 		case "factorymode":
 		case "fm":
 			FactoryMode = FactoryMode !== null ? null : Origin;
-			chat(Origin, FactoryMode !== null ?
+			chat(Origin,  FactoryMode !== null ?
 						"I will gift future units to you as they produce." :
 						"I will stop automatically gifting you units.");
 		case "givetanks": // Fall through
