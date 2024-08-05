@@ -166,18 +166,17 @@ function ManageResearchStages() {
 	}
 }
 function ChooseForwardLocation(Enemy, DistancePercent) {
-	var Us = startPositions[me];
-	var Them = startPositions[Enemy];
+	var Us	   = startPositions[me];
+	var Them   = startPositions[Enemy];
 	var NewPos = { y: Us.x, y : Us.y }
-	if (Us.x > Them.x) {
+	if (Us.x   > Them.x) {
 		NewPos.x = Us.x - ((Us.x - Them.x) * (DistancePercent / 100));
 	}
 	else
 	{
 		NewPos.x = Us.x + ((Them.x - Us.x) * (DistancePercent / 100));
 	}
-	if (Us.y > Them.y)
-	{
+	if (Us.y > Them.y) {
 		NewPos.y = Us.y - ((Us.y - Them.y) * (DistancePercent / 100));
 	}
 	else
@@ -287,17 +286,17 @@ function PerformAttack() {
 	}
 	for (D in EnemyDroids) { // Enemy attack droids.
 		if (EnemyDroids[D].droidType === DROID_CYBORG_CONSTRUCT || EnemyDroids[D].droidType === DROID_CONSTRUCT) continue;
-		++EnemyAttackDroids; } // Only attack when we have all possible units, or we have 3x as many units as them.
-	if (Droids.length != 150 && ((EnemyAttackDroids * 3 > OurAttackDroids) || OurAttackDroids < 20))
+		++EnemyAttackDroids; } // Only attack when we have all possible units, or we have 2x as many units as them.
+	if (Droids.length != 150 && ((EnemyAttackDroids * 2 > OurAttackDroids) || OurAttackDroids < 20))
 	{
 		OrderRetreat(false);
 		return;
 	}
 	var NonDefenseStructs = enumCriticalStructs(Target);
-	if (EnemyAttackDroids < 20) { // They are almost dead, go finish them off.
+	if (EnemyAttackDroids < 20) { // If they're almost dead, go finish them off.
 		for (Droid in Droids)
 		{
-			var AttackStructure = Math.floor(Math.random()*2); // Boolean
+			var AttackStructure = Math.floor(Math.random() * 2); // Boolean
 			if (Droids[Droid].droidType === DROID_CONSTRUCT || Droids[Droid].droidType === DROID_CYBORG_CONSTRUCT) continue;
 			if (AttackStructure)
 			{
@@ -383,18 +382,18 @@ function FinishHalfBuilds() {
 	}
 }
 function CountTrucks() {
-	var Trucks = enumDroid(me, DROID_CONSTRUCT);
-	var BorgTrucks = enumDroid(me, DROID_CYBORG_CONSTRUCT);
-	var Len = 0;
-	if (Trucks) Len += Trucks.length;
+	var Trucks	= enumDroid(me, DROID_CONSTRUCT);
+	var BorgTrucks	= enumDroid(me, DROID_CYBORG_CONSTRUCT);
+	var Len		= 0;
+	if     (Trucks) Len += Trucks.length;
 	if (BorgTrucks) Len += BorgTrucks.length;
 	return Len;
 }
 function FindTrucks(Requested, StealOk, AllowOilers) { // Find Requested number of idle trucks.
-	var TruckList = [];
-	var KnownTrucks = enumDroid(me, DROID_CONSTRUCT);
+	var TruckList	    = [];
+	var KnownTrucks     = enumDroid(me, DROID_CONSTRUCT);
 	var KnownBorgTrucks = enumDroid(me, DROID_CYBORG_CONSTRUCT);
-	var Known = KnownTrucks.concat(KnownBorgTrucks);
+	var Known	    = KnownTrucks.concat(KnownBorgTrucks);
 	for (var Inc = 0; Inc < Known.length; ++Inc)
 	{
 		if (!AllowOilers && IsOilTruck(Known[Inc]))
@@ -487,7 +486,7 @@ function BuildOils() {
 	if (!Truckles || !Truckles.length) return false;
 	var Oils = enumFeature(-1, OilPool);
 	for (var Inc = 0; Inc < Oils.length; ++Inc) {
-		if (MaxOilDistance < distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, Oils[Inc].x, Oils[Inc].y)) { //Too far away
+		if (MaxOilDistance < distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, Oils[Inc].x, Oils[Inc].y)) { // Too far away
 		continue; }
 		if (GetJobForStruct(Oils[Inc].x, Oils[Inc].y, baseStruct_Derrick)) continue;
 		var Trucky = FindNextIdleOilTruck();
@@ -523,7 +522,7 @@ function eventStructureBuilt(Struct, Droid) {
 	}
 }
 function MakeTrucks(IsBorgFac) {
-	var Trucks = enumDroid(me, DROID_CONSTRUCT);
+	var Trucks   = enumDroid(me, DROID_CONSTRUCT);
 	var TruckNum = CountTrucks() + TrucksBeingMade;
 	if (TruckNum >= 15) return false;
 	var Facs;
@@ -628,8 +627,8 @@ function DoAllResearch() {
 	}
 }
 function NumRepairFacilities() {
-	var Repairs = enumStruct(me, REPAIR_FACILITY);
-	return Repairs ? Repairs.length : 0;
+	var	Repairs = enumStruct(me, REPAIR_FACILITY);
+	return  Repairs ? Repairs.length : 0;
 }
 function WorkOnBase() {
 	var Researches	= enumStruct(me, baseStruct_Research);
