@@ -1,20 +1,20 @@
-const MaxOilDistance 	  = 20;	// How many tiles away an oil has to be before we will NOT build it.
+const MaxOilDistance 	  = 20;		// How many tiles away an oil has to be before we will NOT build on it.
 const MaxWatchingDistance = 45;
-var UniversalRallyPoint = null;
-var TrucksBeingMade = 0;	// The number of trucks currently in production.
-var HadExtraTrucks  = false;	// If we started with more than 15 trucks, as some maps do.
-var EnemyNearBase   = false;	// Whether there's enemy units near our base.
-var FactoryMode		= null;
-var LastBeaconX		= null;
-var LastBeaconY		= null;
-var LastBeaconOrigin	= null;
-var FastControlPlayer	= null;
+var UniversalRallyPoint   = null;
+var TrucksBeingMade 	  = 0;		// The number of trucks currently in production.
+var HadExtraTrucks  	  = false;	// If we started with more than 15 trucks, as some maps do.
+var EnemyNearBase   	  = false;	// Whether there's enemy units near our base.
+var FactoryMode		  = null;
+var LastBeaconX		  = null;
+var LastBeaconY		  = null;
+var LastBeaconOrigin	  = null;
+var FastControlPlayer	  = null;
 var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
-var BuildJobs   = [];
-var IsATWeapon  = {};
-var RBGCounter  = 0; 		// Group 1 is reserved for things that don't belong in a group.
-var RBGReg	= {};
-function RBGroup() { this.ID = ++RBGCounter; }
+var BuildJobs    = [];
+var IsATWeapon   = {};
+var RBGCounter   = 0; 		// Group 1 is reserved for things that don't belong in a group.
+var RBGReg	 = {};
+function RBGroup()  { this.ID = ++RBGCounter; }
 RBGroup.prototype = {
 	AddDroid : function(Droid) {
 		RBGReg[Droid.id] = this.ID;},
@@ -79,21 +79,19 @@ BuildJob.prototype = {
 	{
 	return this.Group.Size(); }, }
 function GetJobForStruct(x, y, StructType) {
-	var J = BuildJobs;
+	var  J = BuildJobs;
 	for (B in J) {
-	if (J[B].x == x && J[B].y == y && (!StructType || J[B].StructType === StructType) ) return J[B]; }
+	if  (J[B].x == x && J[B].y == y && (!StructType || J[B].StructType === StructType) ) return J[B]; }
 	return null; }
 function AttackUnitBusy(Droid) {
-	switch (Droid.order)
-	{
+	switch (Droid.order)   {
 		case DORDER_ATTACK:
 		case DORDER_RECYCLE:
 		case DORDER_RTR:
 			return true;
 		default:
 			return false;
-	}
-}
+	} }
 function GetCurrentBorgATPercent() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var NumAT = 0;
@@ -123,23 +121,18 @@ function ShouldBuildATTank() {
 function ShouldBuildATBorg() { // le operator is not a typo.
 	return CurrentRatio.BorgATPercent >= GetCurrentBorgATPercent(); }
 function PopulateWeaponTypes() {
-	for (Tmp in AT_TankTemplates)
-	{
+	for (Tmp in AT_TankTemplates) {
 		IsATWeapon[AT_TankTemplates[Tmp][2]] = true;
 	}
-	for (Tmp in AT_BorgTemplates)
-	{
+	for (Tmp in AT_BorgTemplates) {
 		IsATWeapon[AT_BorgTemplates[Tmp][2]] = true;
 	}
-	for (Tmp in AP_TankTemplates)
-	{
+	for (Tmp in AP_TankTemplates) {
 		IsATWeapon[AP_TankTemplates[Tmp][2]] = false;
 	}
-	for (Tmp in AP_BorgTemplates)
-	{
+	for (Tmp in AP_BorgTemplates) {
 		IsATWeapon[AP_BorgTemplates[Tmp][2]] = false;
-	}
-}
+	} }
 function IsAntiBorg(Droid) {
 	return !IsATWeapon[Droid.weapons[0].name];
 }
@@ -147,24 +140,18 @@ function IsAntiTank(Droid) {
 	return IsATWeapon[Droid.weapons[0].name];
 }
 function eventDestroyed(Obj) {
-	if (Obj.type === DROID)
-	{
+	if (Obj.type === DROID) {
 		delete RBGReg[Obj.id];
-	}
-}
+	} }
 function ManageResearchStages() {
-	for (S in ResearchStages)
-	{
+	for  (S in  ResearchStages) {
 		if (ResearchStages[S].Appended) continue;
 		var Res = getResearch(ResearchStages[S].Trigger);
-		if (Res.done)
-		{
+		if (Res.done) {
 			ResearchPath = ResearchPath.concat(ResearchStages[S].TechArray);
 			ResearchStages[S].Appended = true;
 			return;
-		}
-	}
-}
+		} } }
 function ChooseForwardLocation(Enemy, DistancePercent) {
 	var Us	   = startPositions[me];
 	var Them   = startPositions[Enemy];
@@ -172,15 +159,13 @@ function ChooseForwardLocation(Enemy, DistancePercent) {
 	if (Us.x   > Them.x) {
 		NewPos.x = Us.x - ((Us.x - Them.x) * (DistancePercent / 100));
 	}
-	else
-	{
+	else {
 		NewPos.x = Us.x + ((Them.x - Us.x) * (DistancePercent / 100));
 	}
 	if (Us.y > Them.y) {
 		NewPos.y = Us.y - ((Us.y - Them.y) * (DistancePercent / 100));
 	}
-	else
-	{
+	else {
 		NewPos.y = Us.y + ((Them.y - Us.y) * (DistancePercent / 100));
 	}
 	NewPos.x = Math.floor(NewPos.x);
@@ -204,22 +189,17 @@ function AttackTarget(TargetObject, UnitList, ForceAttack) {
 		}
 		if (orderDroidObj(UnitList[D], DORDER_ATTACK, TargetObject)) continue;
 		orderDroidLoc(UnitList[D], DORDER_MOVE, TargetObject.x, TargetObject.y);
-	}
-}
+	} }
 function WatchForEnemies() {
 	if (FastControlPlayer !== null) return;
 	var EnemyDroids = enumRange(startPositions[me].x, startPositions[me].y, MaxWatchingDistance, ENEMIES, true);		
-	if ((EnemyNearBase = (EnemyDroids && EnemyDroids.length > 0)))
-	{
+	if ((EnemyNearBase = (EnemyDroids && EnemyDroids.length > 0))) {
 		rbdebug("Attacking " + EnemyDroids.length + " nearby enemy droids");
 		var Droids = enumDroid(me, DROID_ANY);
 		if (!Droids || !Droids.length) return;
-		for (D in EnemyDroids)
-		{
+		for (D in EnemyDroids) {
 			AttackTarget(EnemyDroids[D], Droids, false);
-		}
-	}
-}
+		} } }
 function ChooseEnemy(Force) {
 	if (EnemyNearBase && !Force) return null; // Don't go on a crusade when there's a bad guy nearby.
 	var Enemies = [];
@@ -237,16 +217,13 @@ function ChooseEnemy(Force) {
 	}
 	if (!Enemies.length) return null; // Pick the closest one.
 	var ClosestDistance = Infinity;
-	var ClosestEnemy = null;
-	for (Enemy in Enemies)
-	{
+	var ClosestEnemy    = null;
+	for (Enemy in Enemies) {
 		var NewDistance = distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, startPositions[Enemies[Enemy]].x, startPositions[Enemies[Enemy]].y);
-		if (ClosestDistance > NewDistance)
-		{
+		if (ClosestDistance > NewDistance) {
 			ClosestDistance = NewDistance;
 			ClosestEnemy = Enemies[Enemy];
-		}
-	}
+		} }
 	return ClosestEnemy;
 }
 function enumCriticalStructs(Player) {
@@ -264,8 +241,7 @@ function enumCriticalStructs(Player) {
 				break;
 			default:
 				break;
-		}
-	}
+		} }
 	return NonDefenseStructs;
 }
 function PerformAttack() {
@@ -417,11 +393,11 @@ function OrderModuleBuild(BaseStructure) {
 	{
 		case FACTORY:
 			Module = Module_Factory;
-			TrucksWeWant = 5;
+			TrucksWeWant = 2;
 			break;
 		case RESEARCH_LAB:
 			Module = Module_Research;
-			TrucksWeWant = 4;
+			TrucksWeWant = 2;
 			break;
 		case POWER_GEN:
 			Module = Module_Generator;
@@ -573,7 +549,7 @@ function UnitInGroup(GroupID, Droid) {
 }
 function MakeTanks() {
 	if (MakeTrucks(false)) return; // Make trucks if we don't have enough.
-	var CC = enumStruct(me, baseStruct_CC);
+	var  CC  = enumStruct(me, baseStruct_CC);
 	if (!CC.length || CC[0].status != BUILT) return; // Don't make tanks if we don't have a command center.
 	var Facs = enumStruct(me, baseStruct_Factory);
 	if (Facs == null) return;
@@ -637,18 +613,19 @@ function WorkOnBase() {
 	var BorgFacs	= enumStruct(me, baseStruct_BorgFac);
 	var CC		= enumStruct(me, baseStruct_CC);
 	var NumTrucks	= CountTrucks(); // Grab oiler trucks.
-	if (NeedToBuildOils())
-	{
-		BuildOils();
+	if (NeedToBuildOils()) {
+	    BuildOils();
 	}
-	else
-	{
-		OilTrucks.Wipe();
+	else {
+	    OilTrucks.Wipe();
 	} // Basic stuff just to get us going
-	if (NumTrucks <= 4 && Factories.length < 2)
+	if (Generators.length < 1)
 	{
-		OrderBaseBuild(baseStruct_Factory);
-		return; //Don't try and build anything else but oils until we have these.
+	    OrderBaseBuild(baseStruct_Generator);
+	}
+	if (NumTrucks <= 4 && Factories.length < 2) {
+	    OrderBaseBuild(baseStruct_Factory);
+	    return; // Don't try and build anything else but oils until we have these.
 	}
 	if (Researches.length < 3)
 	{
@@ -678,8 +655,7 @@ function WorkOnBase() {
 	{
 		OrderBaseBuild(baseStruct_Factory);
 	}
-	// Get borg facs up
-	if (isStructureAvailable(baseStruct_BorgFac, me) && BorgFacs.length < Limit_BFac)
+	if (isStructureAvailable(baseStruct_BorgFac, me) && BorgFacs.length < Limit_BFac) // Get borg facs up
 	{
 		OrderBaseBuild(baseStruct_BorgFac);
 	}
@@ -735,7 +711,7 @@ function WorkOnBase() {
 function CheckNeedRecycle() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var RecycleCount = 35;
-	if (Droids.length !== 150) return; //Nothing to do.
+	if (Droids.length !== 150) return; // Nothing to do.
 	rbdebug("At unit limit. Recycling " + RecycleCount + " attack units.");
 	for (var Dec = Droids.length - 1; Dec >= Droids.length - (RecycleCount + 1); --Dec)
 	{
