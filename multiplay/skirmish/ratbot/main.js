@@ -285,9 +285,7 @@ function PerformAttack() {
 				if (!EnemyDroids.length) continue;
 				var Element = Math.floor(Math.random() * EnemyDroids.length);
 				orderDroidObj(Droids[Droid], DORDER_ATTACK, EnemyDroids[Element]);
-			}
-		}
-	}
+			} } }
 	else { // They got an army, just send loads to their base.
 		for (Droid in Droids)
 		{
@@ -296,9 +294,7 @@ function PerformAttack() {
 				continue;
 			}
 			orderDroidLoc(Droids[Droid], DORDER_MOVE, startPositions[Target].x, startPositions[Target].y);
-		}
-	}
-}
+		} } }
 function MakeBorgs() {
 	var BorgFacs = enumStruct(me, baseStruct_BorgFac);
 	var TankFacs = enumStruct(me, baseStruct_Factory);
@@ -327,10 +323,7 @@ function MakeBorgs() {
 			if (buildDroid(BorgFacs[Fac], TemplateName, AP_BorgTemplates[T][0], AP_BorgTemplates[T][1], "", DROID_CYBORG, AP_BorgTemplates[T][2]))
 			{
 				continue FactoryLoop;
-			}
-		}
-	}
-}
+			} } } }
 function TruckBusy(Truck) {
 	switch (Truck.order)
 	{
@@ -340,8 +333,7 @@ function TruckBusy(Truck) {
 			return true;
 		default:
 			return false;
-	}
-}
+	} }
 function FinishHalfBuilds() {
 	var Structs = enumStruct(me);
 	for (S in Structs)
@@ -354,9 +346,7 @@ function FinishHalfBuilds() {
 			{
 				orderDroidObj(Trucks[T], DORDER_HELPBUILD, Structs[S]);
 			}
-		}
-	}
-}
+		} } }
 function CountTrucks() {
 	var Trucks	= enumDroid(me, DROID_CONSTRUCT);
 	var BorgTrucks	= enumDroid(me, DROID_CYBORG_CONSTRUCT);
@@ -422,8 +412,7 @@ function NeedToBuildOils() {
 		if (MaxOilDistance >= distBetweenTwoPoints(startPositions[me].x, startPositions[me].y, Oils[O].x, Oils[O].y))
 		{
 			return true;
-		}
-	}
+		} }
 	return false;
 }
 function IsOilTruck(Droid) {
@@ -619,7 +608,7 @@ function WorkOnBase() {
 	else {
 	    OilTrucks.Wipe();
 	} // Basic stuff just to get us going
-	if (Generators.length < 1)
+	if (Generators.length < 2 && (NumTrucks >= 6)
 	{
 	    OrderBaseBuild(baseStruct_Generator);
 	}
@@ -850,16 +839,16 @@ function eventChat(Origin, Target, Msg) {
 		case "fastcontrol":
 		case "fc":
 			FastControlPlayer = FastControlPlayer !== null ? null : Origin;
-			chat(Origin, FastControlPlayer !== null ?
-						"I will move my attack units to wherever you drop beacons in the future." :
-						"I will stop following your beacons.");
+			chat(Origin, 	    FastControlPlayer !== null ?
+					"I will move my attack units to wherever you drop beacons in the future." :
+					"I will stop following your beacons.");
 			break;
 		case "factorymode":
 		case "fm":
 			FactoryMode = FactoryMode !== null ? null : Origin;
 			chat(Origin,  FactoryMode !== null ?
-						"I will gift future units to you as they produce." :
-						"I will stop automatically gifting you units.");
+					"I will gift future units to you as they produce." :
+					"I will stop automatically gifting you units.");
 		case "givetanks": // Fall through
 		{
 			var Droids = enumDroid(me, DROID_ANY);
@@ -933,9 +922,7 @@ function eventChat(Origin, Target, Msg) {
 				orderDroidLoc(Droids[Droid], DORDER_MOVE, LastBeaconX, LastBeaconY);
 			}
 			break;
-		}
-	}
-}
+		} } }
 function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (Attacker.player === me || EnemyNearBase || FastControlPlayer !== null) return;
 	if (Target.type === DROID && Target.health < 60 && NumRepairFacilities() > 0) // 60% damage
@@ -973,9 +960,7 @@ function eventBeacon(X, Y, Origin, Target, Msg) {
 			else
 			{
 				orderDroidLoc(Droids[D], DORDER_MOVE, X, Y);
-			}
-		}
-	}
+	} } }
 	LastBeaconX = X;
 	LastBeaconY = Y;
 	LastBeaconOrigin = Origin;
@@ -988,6 +973,4 @@ function eventResearched(Research, Herp) {
 		{
 			rbdebug("Event updated ratio to " + Ratios[R].Trigger);
 			CurrentRatio = Ratios[R];
-		}
-	}
-}
+	} } }
