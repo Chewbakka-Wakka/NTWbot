@@ -608,10 +608,9 @@ function WorkOnBase() {
 	else {
 	    OilTrucks.Wipe();
 	} // Basic stuff just to get us going
-	if (Generators.length < 2 && (NumTrucks >= 6)
-	{
+/* 	if (Generators.length < 2 && (NumTrucks >= 6) {
 	    OrderBaseBuild(baseStruct_Generator);
-	}
+	} */
 	if (NumTrucks <= 4 && Factories.length < 2) {
 	    OrderBaseBuild(baseStruct_Factory);
 	    return; // Don't try and build anything else but oils until we have these.
