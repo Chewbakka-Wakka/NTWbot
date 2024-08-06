@@ -848,12 +848,10 @@ function eventChat(Origin, Target, Msg) {
 		} } }
 function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (Attacker.player === me    || EnemyNearBase || FastControlPlayer !== null) return;
-	if (Target.type     === DROID && Target.health < 50 && NumRepairFacilities() > 0) // 50% damage
-	{
+	if (Target.type     === DROID && Target.health < 50 && NumRepairFacilities() > 0) { // 50% damage
 		orderDroid(Target, DORDER_RTR);
 	}
-	if (WeAreWeaker(Attacker.player))
-	{
+	if (WeAreWeaker(Attacker.player)) {
 		OrderRetreat(true);
 		return;
 	}
@@ -862,25 +860,21 @@ function eventAttacked(Target, Attacker) { // Account for splash damage
 	AttackTarget(Attacker, Droids, false);
 }
 function  rbdebug(Msg) {
-	    debug("RatBot " + me + ":: " + Msg);
+	    debug("NTWBot " + me + ":: " + Msg);
 }
 function eventBeacon(X, Y, Origin, Target, Msg) {
 	if (Target !== me || !allianceExistsBetween(Origin, me)) {
 		return;
 	}
-	if (Origin == FastControlPlayer)
-	{ // Perform fast movement control
+	if (Origin == FastControlPlayer) { // Perform fast movement control
 		var Droids = enumDroid(me, DROID_ANY);
-		for (D in Droids)
-		{
+		for (D in Droids) {
 			if (IsTruck(Droids[D])) continue;
 			var Obj = getObject(X, Y);
-			if (Obj)
-			{
+			if (Obj) {
 				orderDroidObj(Droids[D], DORDER_ATTACK, Obj);
 			}
-			else
-			{
+			else {
 				orderDroidLoc(Droids[D], DORDER_MOVE, X, Y);
 	} } }
 	LastBeaconX = X;
@@ -889,10 +883,8 @@ function eventBeacon(X, Y, Origin, Target, Msg) {
 }
 function eventResearched(Research, Herp) {
 	rbdebug("Research for item " + Research.name + " completed.");
-	for (R in Ratios)
-	{
-		if (Ratios[R].Trigger == Research.name)
-		{
+	for (R in Ratios) {
+		if (Ratios[R].Trigger == Research.name) {
 			rbdebug("Event updated ratio to " + Ratios[R].Trigger);
 			CurrentRatio = Ratios[R];
 	} } }
