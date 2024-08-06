@@ -12,53 +12,53 @@ var FastControlPlayer	  = null;
 var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
 var BuildJobs    = [];
 var IsATWeapon   = {};
-var RBGCounter   = 0; 			// Group 1 is reserved for things that don't belong in a group.
-var RBGReg	 = {};
-function RBGroup()  { this.ID = ++RBGCounter; }
-RBGroup.prototype = {
+var NTWGCounter   = 0; 			// Group 1 is reserved for things that don't belong in a group.
+var NTWGReg	 = {};
+function NTWGroup()  { this.ID = ++NTWGCounter; }
+NTWGroup.prototype = {
 	AddDroid : function(Droid) {
-		RBGReg[Droid.id] = this.ID;},
+			NTWGReg[Droid.id] = this.ID;},
 	DelDroid : function(Droid) {
-		delete RBGReg[Droid.id]; },
+		 delete NTWGReg[Droid.id]; },
 	HasDroid : function(Droid) {
-		return RBGReg[Droid.id]  === this.ID; },
-	Wipe : function() {
-		for (R in RBGReg) {
-			if    (RBGReg[R] === this.ID) {
-			delete RBGReg[R]; } } },
+		return NTWGReg[Droid.id]  === this.ID; },
+	Wipe :  function() {
+		for (R in NTWGReg) {
+			if    (NTWGReg[R] === this.ID) {
+			delete NTWGReg[R];
+	} } },
 	Assign : function(Truckles) {
-		this.Wipe();
-		for (T in Truckles) {
-			this.AddDroid(Truckles[T]);
+		 this.Wipe();
+		 for (T in Truckles) {
+		    this.AddDroid(Truckles[T]);
 		} },
 	GetDroids : function() { // Only returns living droids, obviously.
 		var Droids = enumDroid(me, DROID_ANY);
 		var RetVal = [];
 		for (D in Droids) {
-			if (this.HasDroid(Droids[D]))
-			{
+			if (this.HasDroid(Droids[D])) {
 				RetVal.push(Droids[D]);
 			} }
 		return RetVal;
 		},
 	Size : function() { // Kinda expensive.
 		var Num = 0;
-		for (R in RBGReg) {
-			if (RBGReg[R] === this.ID) ++Num; }
+		for  (R in  NTWGReg) {
+			if (NTWGReg[R] === this.ID) ++Num; }
 		return Num; }, }
-var OilTrucks = new RBGroup();
+var OilTrucks = new NTWGroup();
 function BuildJob(Truckles, StructType, x, y, TrucksWeWant, ModNum) {
-	this.Group = new RBGroup();
+	this.Group = new NTWGroup();
 	this.StructType = StructType;
 	this.x = x;
 	this.y = y;
 	this.TrucksWeWant = TrucksWeWant;
-	this.Completed = false;
+	this.Completed	  = false;
 	this.StartingNumModules = ModNum; // How many modules we had when this job was created.
-	for (T in Truckles) {
+	for (T in    Truckles) {
 		if (!Truckles[T]) continue;
 		this.Group.AddDroid(Truckles[T]);
-		orderDroidBuild(Truckles[T], DORDER_BUILD, this.StructType, this.x, this.y);
+		    orderDroidBuild(Truckles[T], DORDER_BUILD, this.StructType, this.x, this.y);
 	}
 	rbdebug("Started build job for a " + this.StructType + " at " + this.x + "," + this.y + " using " + Truckles.length + " trucks"); }
 function StructUsesModules(StructType) {
@@ -87,8 +87,8 @@ function AttackUnitBusy(Droid) {
 			return false;
 	} }
 function GetCurrentBorgATPercent() {
-	var Droids = enumDroid(me, DROID_ANY);
-	var NumAT = 0;
+	var Droids    = enumDroid(me, DROID_ANY);
+	var NumAT     = 0;
 	var NumDroids = 0;
 	for (D in Droids) {
 		if (Droids[D].droidType !== DROID_CYBORG) continue;
@@ -106,8 +106,8 @@ function GetCurrentTankATPercent() {
 		if (IsAntiTank(Droids[D])) ++NumAT;
 		++NumDroids;
 	}
-	var Value = (NumAT / NumDroids) * 100;
-	return Value >= 1 ? Value : 0;
+	var	Value  = (NumAT / NumDroids) * 100;
+	return  Value >= 1 ? Value : 0;
 }
 function ShouldBuildATTank() {
 	return CurrentRatio.TankATPercent >= GetCurrentTankATPercent(); }
@@ -171,24 +171,23 @@ function AttackTarget(TargetObject, UnitList, ForceAttack) {
 		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;	// In range for an attack.
 		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) 	 continue;		// Fire on the appropriate type of unit wherever possible.
 		if (!ForceAttack &&
-			TargetObject.type == DROID &&
-			(TargetObject.droidType != DROID_CYBORG &&
+			 TargetObject.type 	 == DROID 	&&
+			(TargetObject.droidType  != DROID_CYBORG &&
 			IsAntiBorg(UnitList[D])) ||
-			(TargetObject.droidType == DROID_CYBORG &&
-			IsAntiTank(UnitList[D])))
-		{
+			(TargetObject.droidType  == DROID_CYBORG &&
+			IsAntiTank(UnitList[D]))) {
 			orderDroidLoc(UnitList[D], DORDER_MOVE, TargetObject.x, TargetObject.y);
 			continue;
 		}
 		if (orderDroidObj(UnitList[D], DORDER_ATTACK, TargetObject)) continue;
-		orderDroidLoc(UnitList[D], DORDER_MOVE, TargetObject.x, TargetObject.y);
+		    orderDroidLoc(UnitList[D], DORDER_MOVE,   TargetObject.x, TargetObject.y);
 	} }
 function WatchForEnemies() {
 	if (FastControlPlayer !== null) return;
 	var  EnemyDroids   = enumRange(startPositions[me].x, startPositions[me].y, MaxWatchingDistance, ENEMIES, true);
 	if ((EnemyNearBase = (EnemyDroids && EnemyDroids.length > 0))) {
 		rbdebug("Attacking " + EnemyDroids.length + " nearby enemy droids");
-		var Droids = enumDroid(me, DROID_ANY);
+		var  Droids  = enumDroid(me, DROID_ANY);
 		if (!Droids || !Droids.length) return;
 		for (D in EnemyDroids) {
 			AttackTarget(EnemyDroids[D], Droids, false);
@@ -198,7 +197,7 @@ function ChooseEnemy(Force) {
 	var Enemies  = [];
 	for (var Inc = 0; Inc < maxPlayers; ++Inc) {
 		if (!Force && WeAreWeaker(Inc)) return null; // Never attack while someone is superior, sit and build up our forces instead.
-		if (Inc === me || allianceExistsBetween(me, Inc)) continue;
+		if (Inc === me  || allianceExistsBetween(me, Inc)) continue;
 		var EnemyStructs = enumCriticalStructs(Inc);
 		var EnemyDroids  = enumDroid(Inc, DROID_ANY);
 		var OurDroids    = enumDroid(me, DROID_ANY);
@@ -241,7 +240,7 @@ function PerformAttack() {
 		OrderRetreat(false);
 		return;
 	}
-	var EnemyDroids = enumDroid(Target, DROID_ANY);
+	var EnemyDroids	      = enumDroid(Target, DROID_ANY);
 	var EnemyAttackDroids = 0;
 	var OurAttackDroids   = 0;
 	for (D in Droids) {	 // Our attack droids.
@@ -250,7 +249,7 @@ function PerformAttack() {
 	}
 	for  (D in  EnemyDroids) { // Enemy attack droids.
 		if (EnemyDroids[D].droidType === DROID_CYBORG_CONSTRUCT || EnemyDroids[D].droidType === DROID_CONSTRUCT) continue;
-		++EnemyAttackDroids; } // Only attack when we have all possible units, or we have 2x as many units as them.
+		  ++EnemyAttackDroids; } // Only attack when we have all possible units, or we have 2x as many units as them.
 	if (Droids.length != 150 && ((EnemyAttackDroids * 2 > OurAttackDroids) || OurAttackDroids < 20)) {
 		OrderRetreat(false);
 		return;
@@ -290,12 +289,12 @@ function MakeBorgs() {
 			for (T in AT_BorgTemplates) {
 				var TemplateName = AT_BorgTemplates[T][2] + " " + AT_BorgTemplates[T][0] + " " + AT_BorgTemplates[T][1];
 				if (buildDroid(BorgFacs[Fac], TemplateName, AT_BorgTemplates[T][0], AT_BorgTemplates[T][1], "", DROID_CYBORG, AT_BorgTemplates[T][2])) {
-					continue FactoryLoop;
+				continue FactoryLoop;
 		} } }
 		for (T in AP_BorgTemplates) {
 			var TemplateName = AP_BorgTemplates[T][2] + " " + AP_BorgTemplates[T][0] + " " + AP_BorgTemplates[T][1];
 			if (buildDroid(BorgFacs[Fac], TemplateName, AP_BorgTemplates[T][0], AP_BorgTemplates[T][1], "", DROID_CYBORG, AP_BorgTemplates[T][2])) {
-				continue FactoryLoop;
+			continue FactoryLoop;
 		} } } }
 function    TruckBusy(Truck) {
 	switch (Truck.order) {
