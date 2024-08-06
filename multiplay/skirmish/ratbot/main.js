@@ -12,7 +12,7 @@ var FastControlPlayer	  = null;
 var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
 var BuildJobs    = [];
 var IsATWeapon   = {};
-var RBGCounter   = 0; 		// Group 1 is reserved for things that don't belong in a group.
+var RBGCounter   = 0; 			// Group 1 is reserved for things that don't belong in a group.
 var RBGReg	 = {};
 function RBGroup()  { this.ID = ++RBGCounter; }
 RBGroup.prototype = {
@@ -834,15 +834,15 @@ function eventChat(Origin, Target, Msg) {
 		case "fc":
 			FastControlPlayer = FastControlPlayer !== null ? null : Origin;
 			chat(Origin, 	    FastControlPlayer !== null ?
-					"I will move my attack units to wherever you drop beacons in the future." :
-					"I will stop following your beacons.");
+				"I will move my attack units to wherever you drop beacons in the future." :
+				"I will stop following your beacons.");
 			break;
 		case "factorymode":
 		case "fm":
 			FactoryMode = FactoryMode !== null ? null : Origin;
 			chat(Origin,  FactoryMode !== null ?
-					"I will gift future units to you as they produce." :
-					"I will stop automatically gifting you units.");
+				"I will gift future units to you as they produce." :
+				"I will stop automatically gifting you units.");
 		case "givetanks": // Fall through
 		{
 			var Droids = enumDroid(me, DROID_ANY);
@@ -912,8 +912,8 @@ function eventChat(Origin, Target, Msg) {
 			break;
 		} } }
 function eventAttacked(Target, Attacker) { // Account for splash damage
-	if (Attacker.player === me || EnemyNearBase || FastControlPlayer !== null) return;
-	if (Target.type === DROID && Target.health < 50 && NumRepairFacilities() > 0) // 50% damage
+	if (Attacker.player === me    || EnemyNearBase || FastControlPlayer !== null) return;
+	if (Target.type     === DROID && Target.health < 50 && NumRepairFacilities() > 0) // 50% damage
 	{
 		orderDroid(Target, DORDER_RTR);
 	}
