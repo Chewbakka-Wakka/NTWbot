@@ -1,0 +1,8 @@
+{
+    "AI": {
+        "js":   "NTWbot.js",
+        "name": "NTWBot",
+        "tip":  "An AI designed for NTW maps"
+    }
+}
+
