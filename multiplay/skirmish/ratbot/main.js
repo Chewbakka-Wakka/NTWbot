@@ -694,8 +694,7 @@ function WorkOnBase() {
 		if (GetJobForStruct(Location.x, Location.y, baseStruct_Repair)) return;
 		var Job = new BuildJob(Truckles, baseStruct_Repair, Location.x, Location.y, TrucksWeWant, 0);
 		BuildJobs.push(Job);
-	}
-}
+	} }
 function CheckNeedRecycle() {
 	var Droids = enumDroid(me, DROID_ANY);
 	var RecycleCount = 35;
@@ -705,8 +704,7 @@ function CheckNeedRecycle() {
 	{
 		if (!IsAttackUnit(Droids[Dec])) continue;
 		orderDroid(Droids[Dec], DORDER_RECYCLE);
-	}
-}
+	} }
 function IsTruck(Droid) {
 	switch (Droid.droidType)
 	{
@@ -715,8 +713,7 @@ function IsTruck(Droid) {
 			return true;
 		default:
 			return false;
-	}
-}
+	} }
 function IsAttackUnit(Droid) {
 	switch (Droid.droidType)
 	{
@@ -725,16 +722,14 @@ function IsAttackUnit(Droid) {
 			return true;
 		default:
 			return false;
-	}
-}
+	} }
 function RetreatTrucks() {
 	var Droids = enumDroid(me, DROID_CONSTRUCT);
 	for (D in Droids)
 	{
 		if (TruckBusy(Droids[D]) || IsOilTruck(Droids[D])) continue;
 		orderDroidLoc(Droids[D], DORDER_MOVE, startPositions[me].x, startPositions[me].y);
-	}
-}
+	} }
 function AllTrucksIdle(Group) {
 	var Truckles = Group.GetDroids();
 	for (T in Truckles)
@@ -883,15 +878,11 @@ function eventChat(Origin, Target, Msg) {
 		case "We are the Borg.":
 		case "You will be assimilated.":
 		case "Resistance is futile.":
-		case "Resistance is Futile.":
 		case "We will adapt.":
-		case "Irrelevant.":
 		case "We are Borg.":
-		case "We are Borg":
 		case "Irrelevant. You will be assimilated.":
 		{
-			if (playerData[Origin].isAI)
-			{
+			if (playerData[Origin].isAI) {
 				break;
 			}
 			chat(ALL_PLAYERS, Msg);
@@ -899,8 +890,6 @@ function eventChat(Origin, Target, Msg) {
 		}
 		case "power":
 		case "need power":
-		case "power?":
-		case "spare power?":
 			donatePower(playerPower(me) / 2, Origin);
 			break;
 		case "go here":
@@ -924,7 +913,7 @@ function eventChat(Origin, Target, Msg) {
 		} } }
 function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (Attacker.player === me || EnemyNearBase || FastControlPlayer !== null) return;
-	if (Target.type === DROID && Target.health < 60 && NumRepairFacilities() > 0) // 60% damage
+	if (Target.type === DROID && Target.health < 50 && NumRepairFacilities() > 0) // 50% damage
 	{
 		orderDroid(Target, DORDER_RTR);
 	}
@@ -937,12 +926,11 @@ function eventAttacked(Target, Attacker) { // Account for splash damage
 	if (!Droids || !Droids.length) return;
 	AttackTarget(Attacker, Droids, false);
 }
-function rbdebug(Msg) {
-	debug("RatBot " + me + ":: " + Msg);
+function  rbdebug(Msg) {
+	    debug("RatBot " + me + ":: " + Msg);
 }
 function eventBeacon(X, Y, Origin, Target, Msg) {
-	if (Target !== me || !allianceExistsBetween(Origin, me))
-	{
+	if (Target !== me || !allianceExistsBetween(Origin, me)) {
 		return;
 	}
 	if (Origin == FastControlPlayer)
