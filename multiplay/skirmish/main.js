@@ -12,7 +12,7 @@ var FastControlPlayer	  = null;
 var CurrentRatio = new UnitRatio(null, 0.0, 0.0); // Trigger weapon doesn't matter for the first ratio.
 var BuildJobs    = [];
 var IsATWeapon   = {};
-var NTWGCounter   = 0; 			// Group 1 is reserved for things that don't belong in a group.
+var NTWGCounter  = 0; 			// Group 1 is reserved for things that don't belong in a group.
 var NTWGReg	 = {};
 function NTWGroup()  { this.ID = ++NTWGCounter; }
 NTWGroup.prototype = {
@@ -171,7 +171,7 @@ function AttackTarget(TargetObject, UnitList, ForceAttack) {
 		if (!droidCanReach(UnitList[D], TargetObject.x, TargetObject.y)) continue;	// In range for an attack.
 		if (UnitList[D].order === DORDER_ATTACK && !ForceAttack) 	 continue;		// Fire on the appropriate type of unit wherever possible.
 		if (!ForceAttack &&
-			 TargetObject.type 	 == DROID 	&&
+			 TargetObject.type 	 == DROID 	 &&
 			(TargetObject.droidType  != DROID_CYBORG &&
 			IsAntiBorg(UnitList[D])) ||
 			(TargetObject.droidType  == DROID_CYBORG &&
@@ -193,10 +193,10 @@ function WatchForEnemies() {
 			AttackTarget(EnemyDroids[D], Droids, false);
 	} } }
 function ChooseEnemy(Force) {
-	if (EnemyNearBase && !Force) return null; // Don't go on a crusade when there's a bad guy nearby.
+	if (EnemyNearBase && !Force) return null;		// Don't go on a crusade when there's a bad guy nearby.
 	var Enemies  = [];
 	for (var Inc = 0; Inc < maxPlayers; ++Inc) {
-		if (!Force && WeAreWeaker(Inc)) return null; // Never attack while someone is superior, sit and build up our forces instead.
+		if (!Force && WeAreWeaker(Inc)) return null;	// Never attack while someone is superior, sit and build up our forces instead.
 		if (Inc === me  || allianceExistsBetween(me, Inc)) continue;
 		var EnemyStructs = enumCriticalStructs(Inc);
 		var EnemyDroids  = enumDroid(Inc, DROID_ANY);
@@ -307,7 +307,7 @@ function    TruckBusy(Truck) {
 	} }
 function FinishHalfBuilds() {
 	var Structs = enumStruct(me);
-	for (S in Structs) {
+	for (S in Structs)  {
 		var Job = GetJobForStruct(Structs[S].x, Structs[S].y);
 		if (Structs[S].status != BUILT && (!Job || Job.Completed || !Job.NumAssignedTrucks() || AllTrucksIdle(Job.Group))) {
 			var Trucks = FindTrucks(2, false);
@@ -465,13 +465,10 @@ function MakeTrucks(IsBorgFac) {
 			}
 		}
 		for (Trucky in TruckTemplates) {
-			if (buildDroid(Facs[Inc], "Truck", TruckTemplates[Trucky][0], TruckTemplates[Trucky][1], "", DROID_CONSTRUCT, TruckTemplates[Trucky][2]))
-			{
+			if (buildDroid(Facs[Inc], "Truck", TruckTemplates[Trucky][0], TruckTemplates[Trucky][1], "", DROID_CONSTRUCT, TruckTemplates[Trucky][2])) {
 				++TrucksBeingMade;
 				break;
-			}
-		}
-	}
+			} } }
 	return true;
 }
 function UnitInGroup(GroupID, Droid) {
@@ -479,12 +476,11 @@ function UnitInGroup(GroupID, Droid) {
 	for (G in Group) {
 		if (Group[G].id === Droid.id) {
 			return true;
-		}
-	}
+		} }
 	return false;
 }
 function MakeTanks() {
-	if (MakeTrucks(false)) return; // Make trucks if we don't have enough.
+	if (MakeTrucks(false)) return;			 // Make trucks if we don't have enough.
 	var  CC  = enumStruct(me, baseStruct_CC);
 	if (!CC.length || CC[0].status != BUILT) return; // Don't make tanks if we don't have a command center.
 	var Facs = enumStruct(me, baseStruct_Factory);
@@ -495,46 +491,33 @@ function MakeTanks() {
 		if (ShouldBuildATTank()) {
 			for (T in AT_TankTemplates) {
 				var TemplateName = AT_TankTemplates[T][2] + " " + AT_TankTemplates[T][0] + " " + AT_TankTemplates[T][1];
-				if (buildDroid(Facs[Fac], TemplateName, AT_TankTemplates[T][0], AT_TankTemplates[T][1], "", DROID_WEAPON, AT_TankTemplates[T][2]))
-				{
+				if (buildDroid(Facs[Fac], TemplateName, AT_TankTemplates[T][0], AT_TankTemplates[T][1], "", DROID_WEAPON, AT_TankTemplates[T][2])) {
 					continue FactoryLoop;
-				}
-			}
-		}
-		for (T in AP_TankTemplates)
-		{
+				} } }
+		for (T in AP_TankTemplates) {
 			var TemplateName = AP_TankTemplates[T][2] + " " + AP_TankTemplates[T][0] + " " + AP_TankTemplates[T][1];
-			if (buildDroid(Facs[Fac], TemplateName, AP_TankTemplates[T][0], AP_TankTemplates[T][1], "", DROID_WEAPON, AP_TankTemplates[T][2]))
-			{	
+			if (buildDroid(Facs[Fac], TemplateName, AP_TankTemplates[T][0], AP_TankTemplates[T][1], "", DROID_WEAPON, AP_TankTemplates[T][2])) {
 				continue FactoryLoop;
-			}
-		}
-	}
-}
+		} } } }
 function eventGameInit() {
 	PopulateWeaponTypes();
 }
 function ResearchSomething(Lab) {
-	var Worked = false;
+	var  Worked  = false;
 	if (!structureIdle(Lab)) return;
-	for (var Inc = 0; Inc < ResearchPath.length; ++Inc)
-	{
-		if ((Worked = pursueResearch(Lab, ResearchPath[Inc])))
-		{
+	for (var Inc = 0; Inc < ResearchPath.length; ++Inc) {
+		if ((Worked = pursueResearch(Lab, ResearchPath[Inc]))) {
 //			debug(me + ":: Research for item " + ResearchPath[Inc] + " started");
 			break;
-		}
-	}
+		} }
 	return Worked;
 }
 function DoAllResearch() {
 	var Researches = enumStruct(me, RESEARCH_LAB);
-	for (var Inc = 0; Inc < Researches.length; ++Inc)
-	{
+	for (var Inc   = 0; Inc < Researches.length; ++Inc) {
 		if (Researches[Inc].status === BEING_BUILT) continue;
 		ResearchSomething(Researches[Inc]);
-	}
-}
+	} }
 function NumRepairFacilities() {
 	var	Repairs = enumStruct(me, REPAIR_FACILITY);
 	return  Repairs ? Repairs.length : 0;
@@ -559,75 +542,50 @@ function WorkOnBase() {
 	    OrderBaseBuild(baseStruct_Factory);
 	    return; // Don't try and build anything else but oils until we have these.
 	}
-	if (Researches.length < 3)
-	{
+	if     (Researches.length < 3) {
 		OrderBaseBuild(baseStruct_Research);
 	}
-	else if (Factories.length < 2)
-	{
+	else if (Factories.length < 2) {
 		OrderBaseBuild(baseStruct_Factory);
 	} // More automated base building
-	if (Generators.length < 4)
-	{
+	if 	(Generators.length < 4) {
 		OrderBaseBuild(baseStruct_Generator);
 	}
-	else if (Researches.length < Limit_Res)
-	{
+	else if (Researches.length < Limit_Res) {
 		OrderBaseBuild(baseStruct_Research);
 	}
-	else if (Generators.length < Limit_PGen)
-	{
+	else if (Generators.length < Limit_PGen) {
 		OrderBaseBuild(baseStruct_Generator);
 	}
-	else if (CC.length < Limit_CC)
-	{
+	else if (CC.length < Limit_CC) {
 		OrderBaseBuild(baseStruct_CC);
 	}
-	else if (Factories.length < Limit_Fac)
-	{
+	else if (Factories.length < Limit_Fac) {
 		OrderBaseBuild(baseStruct_Factory);
 	}
-	if (isStructureAvailable(baseStruct_BorgFac, me) && BorgFacs.length < Limit_BFac) // Get borg facs up
-	{
+	if (isStructureAvailable(baseStruct_BorgFac, me) && BorgFacs.length < Limit_BFac) {
 		OrderBaseBuild(baseStruct_BorgFac);
 	}
-	if (isStructureAvailable(Module_Research, me))
-	{
+	if (isStructureAvailable(Module_Research, me)) {
 		var FoundOne = false;
-		for (var Inc = 0; Inc < Researches.length; ++Inc)
-		{
-			if (!Researches[Inc].modules)
-			{
-				if (OrderModuleBuild(Researches[Inc]))
-				{
+		for (var Inc = 0; Inc < Researches.length; ++Inc) {
+			if (!Researches[Inc].modules) {
+				if (OrderModuleBuild(Researches[Inc])) {
 					FoundOne = true;
-				}
-			}
-		}
+		} } }
 		if (FoundOne) return; // Research modules first.
 	}
-	if (isStructureAvailable(Module_Factory, me))
-	{ // Factories
-		for (var Inc = 0; Inc < Factories.length; ++Inc)
-		{
-			if (Factories[Inc].modules < 2)
-			{
+	if (isStructureAvailable(Module_Factory, me)) {
+		for (var Inc = 0; Inc < Factories.length; ++Inc) {
+			if (Factories[Inc].modules < 2) {
 				OrderModuleBuild(Factories[Inc]);
-			}
-		}
-	}
-	if (isStructureAvailable(Module_Generator, me))
-	{ // Generators
-		for (var Inc = 0; Inc < Generators.length; ++Inc)
-		{
-			if (!Generators[Inc].modules)
-			{
+		} } }
+	if (isStructureAvailable(Module_Generator, me)) {
+		for (var Inc = 0; Inc < Generators.length; ++Inc) {
+			if (!Generators[Inc].modules) {
 				OrderModuleBuild(Generators[Inc]);
-			}
-		}
-	}
-	if (isStructureAvailable(baseStruct_Repair, me) && NumRepairFacilities() < 5)
-	{
+			} } }
+	if (isStructureAvailable(baseStruct_Repair, me) && NumRepairFacilities() < 5) {
 		var RP = GetUniversalRallyPoint();
 		if (!RP) return;
 		var TrucksWeWant = 1;
@@ -641,17 +599,15 @@ function WorkOnBase() {
 	} }
 function CheckNeedRecycle() {
 	var Droids = enumDroid(me, DROID_ANY);
-	var RecycleCount = 35;
+	var RecycleCount  =   35;
 	if (Droids.length !== 150) return; // Nothing to do.
 	rbdebug("At unit limit. Recycling " + RecycleCount + " attack units.");
-	for (var Dec = Droids.length - 1; Dec >= Droids.length - (RecycleCount + 1); --Dec)
-	{
+	for (var Dec = Droids.length - 1; Dec >= Droids.length - (RecycleCount + 1); --Dec) {
 		if (!IsAttackUnit(Droids[Dec])) continue;
 		orderDroid(Droids[Dec], DORDER_RECYCLE);
 	} }
 function IsTruck(Droid) {
-	switch (Droid.droidType)
-	{
+	switch (Droid.droidType) {
 		case DROID_CYBORG_CONSTRUCT:
 		case DROID_CONSTRUCT:
 			return true;
@@ -659,41 +615,34 @@ function IsTruck(Droid) {
 			return false;
 	} }
 function IsAttackUnit(Droid) {
-	switch (Droid.droidType)
-	{
+	switch (Droid.droidType) {
 		case DROID_WEAPON:
 		case DROID_CYBORG:
 			return true;
 		default:
 			return false;
 	} }
-function RetreatTrucks() {
+function RetreatTrucks()  {
 	var Droids = enumDroid(me, DROID_CONSTRUCT);
-	for (D in Droids)
-	{
+	for (D in Droids) {
 		if (TruckBusy(Droids[D]) || IsOilTruck(Droids[D])) continue;
 		orderDroidLoc(Droids[D], DORDER_MOVE, startPositions[me].x, startPositions[me].y);
 	} }
 function AllTrucksIdle(Group) {
 	var Truckles = Group.GetDroids();
-	for (T in Truckles)
-	{
+	for (T in Truckles) {
 		if (TruckBusy(Truckles[T])) return false;
 	}
 	return true;
 }
 function CheckForDeadBuildJobs() {
 	Reset:
-	for (var Inc = 0; Inc < BuildJobs.length; ++Inc)
-	{
-		if (BuildJobs[Inc].Completed || !BuildJobs[Inc].NumAssignedTrucks() || AllTrucksIdle(BuildJobs[Inc].Group))
-		{
+	for (var Inc = 0; Inc < BuildJobs.length; ++Inc) {
+		if (BuildJobs[Inc].Completed || !BuildJobs[Inc].NumAssignedTrucks() || AllTrucksIdle(BuildJobs[Inc].Group)) {
 			BuildJobs[Inc].Group.Wipe();
 			BuildJobs.splice(Inc);
 			continue Reset;
-		}
-	}
-}
+		} } }
 function eventStartLevel() {
 	if (CountTrucks() > 15) HadExtraTrucks = true;
 	UpdateRatios();
@@ -711,37 +660,30 @@ function eventStartLevel() {
 	setTimer("ManageResearchStages", 5000);
 	setTimer("UpdateUniversalRallyPoint", 30000);
 }
-function UpdateRatios() { // Although eventResearched() does a nice job with stuff we researched ourselves, allied stuff needs this function.
-	for (R in Ratios) // Make ratios work properly in bases modes.
-	{
+function   UpdateRatios() { // Although eventResearched() does a nice job with stuff we researched ourselves, allied stuff needs this function.
+	for (R in Ratios) { // Make ratios work properly in bases modes.
 		var Res = getResearch(Ratios[R].TriggerTech);
-		if (Res.done)
-		{
+		if (Res.done) {
 			CurrentRatio = Ratios[R];
 			break;
-		}
-	}
-}
+		} } }
 function UpdateUniversalRallyPoint() {
 	var Enemy = ChooseEnemy(true);
 	if (!Enemy) return null; // Move to a reasonable rally point. The actual API for this seems to be broken.
 	UniversalRallyPoint = ChooseForwardLocation(Enemy, 25);
 }
 function GetUniversalRallyPoint() {
-	if (!UniversalRallyPoint)
-	{
-		UpdateUniversalRallyPoint();
+	if (!UniversalRallyPoint) {
+       UpdateUniversalRallyPoint();
 	}
 	return UniversalRallyPoint;
 }
 function eventDroidBuilt(droid, fac1) {
-	if (droid.droidType === DROID_CONSTRUCT || droid.droidType === DROID_CYBORG_CONSTRUCT)
-	{
+	if (droid.droidType === DROID_CONSTRUCT || droid.droidType === DROID_CYBORG_CONSTRUCT) {
 		--TrucksBeingMade;
 		return;
 	}
-	if (FactoryMode !== null)
-	{
+	if (FactoryMode !== null) {
 		donateObject(droid, FactoryMode);
 		return;
 	}
@@ -758,15 +700,13 @@ function WeAreWeaker(OtherPlayer) {
 function OrderRetreat(Force) {
 	var Droids = enumDroid(me, DROID_ANY);
 	rbdebug("Retreating");
-	for (D in Droids)
-	{
+	for (D in Droids) {
 		if (Droids[D].droidType == DROID_CONSTRUCT || Droids[D].droidType == DROID_CYBORG_CONSTRUCT) continue;
 		if (!Force && AttackUnitBusy(Droids[D])) continue;
-		var Loc = GetUniversalRallyPoint();
+		var  Loc = GetUniversalRallyPoint();
 		if (!Loc) continue;
 		orderDroidLoc(Droids[D], DORDER_MOVE, Loc.x, Loc.y);
-	}
-}
+	} }
 function eventChat(Origin, Target, Msg) {
 	if (Target !== me || !allianceExistsBetween(Origin, me)) {
 		return;
